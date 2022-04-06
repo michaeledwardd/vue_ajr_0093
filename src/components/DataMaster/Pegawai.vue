@@ -1,6 +1,6 @@
 <template>
   <v-main class="list">
-    <h3 class="text font-weight-medium mb-5">Promo</h3>
+    <h3 class="text font-weight-medium mb-5">Pegawai</h3>
     
     <v-card>
       <v-card-title>
@@ -15,6 +15,7 @@
         <v-spacer></v-spacer>
 
         <v-btn color="blue" dark @click="dialog = true"> Tambah </v-btn>
+        
 
       </v-card-title>
       <v-data-table :headers="headers" :items="courses" :search="search">
@@ -23,8 +24,8 @@
                 <v-btn icon small class="mr-2" @click="editHandler(item)">
                   <v-icon color="red">mdi-pencil</v-icon>
                 </v-btn>
-                <v-btn icon small @click="deleteHandler(item.id_promo)">
-                     <v-icon color="green">mdi-delete</v-icon>
+                <v-btn icon small @click="showHandler(item.id_mobil)">
+                     <v-icon color="black">mdi-view-list</v-icon>
                 </v-btn>
             </template>
 
@@ -90,11 +91,12 @@ export default {
       dialog: false,
       dialogConfirm: false,
       headers: [
-        { text: "Kode Promo", align: "start", sortable: true, value: "kode_promo"},
-        { text: "Jenis Promo", value: 'jenis_promo'},
-        { text: "Jumlah Potongan", value: 'jumlah_potongan'},
-        { text: "Keterangan", value: 'keterangan'},
-        { text: "Status Promo", value: 'status_promo'},
+        { text: "Nama Pegawai", align: "start", sortable: true, value: "nama_pegawai"},
+        { text: "Jabatan", value: 'nama_role'},
+        { text: "Tanggal lahir", value: 'tgl_lahir'},
+        { text: "Jenis Kelamin", value: 'jenis_kelamin'},
+        { text: "Email", value: 'email'},
+        { text: "Status", value: 'is_aktif'},
         { text: "Action", value:'actions'},
       ],
       course: new FormData,
@@ -122,7 +124,7 @@ export default {
     },
 
     readData(){
-      var url = this.$api + '/promo';
+      var url = this.$api + '/pegawai';
       this.$http.get(url, {
         headers: {
           'Authorization' : 'Bearer ' + localStorage.getItem('token')
@@ -230,7 +232,7 @@ export default {
       this.dialog = true;
     },
 
-    deleteHandler(id_promo) {
+    deleteHandler(id) {
       this.deleteId = id_promo;
       this.dialogConfirm = true;
     },

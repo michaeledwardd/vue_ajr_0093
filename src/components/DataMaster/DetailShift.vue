@@ -1,6 +1,6 @@
 <template>
   <v-main class="list">
-    <h3 class="text-h3 font-weight-medium mb-5">Jadwal Kerja Pegawai AJR</h3>
+    <h3 class="text font-weight-medium mb-5">Jadwal Kerja Pegawai AJR</h3>
     
     <v-card>
       <v-card-title>
@@ -14,7 +14,7 @@
 
         <v-spacer></v-spacer>
 
-        <v-btn color="success" dark @click="dialog = true"> Tambah </v-btn>
+        <v-btn color="blue" dark @click="dialog = true"> Tambah </v-btn>
 
       </v-card-title>
       <v-data-table :headers="headers" :items="courses" :search="search">
@@ -97,7 +97,7 @@ export default {
         { text: "Hari Kerja", align: "start", sortable: true, value: "hari_kerja"},
         { text: "Jenis Shift", value: 'jenis_shift'},
         { text: "Nama Pegawai", value: 'nama_pegawai'},
-        // { text: "Keterangan", value: 'keterangan'},
+        { text: "Jabatan", value: 'nama_role'},
         // { text: "Status Promo", value: 'status_promo'},
         { text: "Action", value:'actions'},
       ],

@@ -21,19 +21,47 @@ const router = new VueRouter({
                     meta: {title : 'Dashboard'},
                     component: importComponent('Dashboard'),
                 },
-                //courses
+                //promo
                 {
                     path: '/promo',
                     name: 'Promo',
                     meta: {title : 'Promo'},
                     component: importComponent('DataMaster/Promo'),
                 },
-                //courses
+                //detail shift
                 {
                     path: '/detailshift',
                     name: 'DetailShift',
                     meta: {title : 'DetailShift'},
                     component: importComponent('DataMaster/DetailShift'),
+                },
+                //role
+                {
+                    path: '/role',
+                    name: 'Role',
+                    meta: {title : 'Role'},
+                    component: importComponent('DataMaster/Role'),
+                },
+                //pegawai
+                {
+                    path: '/pegawai',
+                    name: 'Pegawai',
+                    meta: {title : 'Pegawai'},
+                    component: importComponent('DataMaster/Pegawai'),
+                },
+                //mobil
+                {
+                    path: '/mobil',
+                    name: 'Mobil',
+                    meta: {title : 'Mobil'},
+                    component: importComponent('DataMaster/Mobil'),
+                },
+                //driver
+                {
+                    path: '/driver',
+                    name: 'Driver',
+                    meta: {title : 'Driver'},
+                    component: importComponent('DataMaster/Driver'),
                 },
             ],
         },

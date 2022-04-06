@@ -1,6 +1,6 @@
 <template>
   <v-main class="list">
-    <h3 class="text font-weight-medium mb-5">Promo</h3>
+    <h3 class="text font-weight-medium mb-5">Jabatan Pegawai</h3>
     
     <v-card>
       <v-card-title>
@@ -23,7 +23,7 @@
                 <v-btn icon small class="mr-2" @click="editHandler(item)">
                   <v-icon color="red">mdi-pencil</v-icon>
                 </v-btn>
-                <v-btn icon small @click="deleteHandler(item.id_promo)">
+                <v-btn icon small @click="deleteHandler(item.id_role)">
                      <v-icon color="green">mdi-delete</v-icon>
                 </v-btn>
             </template>
@@ -34,15 +34,12 @@
     <v-dialog v-model="dialog" persistent max-width="600px">
       <v-card>
         <v-card-title>
-          <span class="headline">{{formTitle}} Promo</span>
+          <span class="headline">{{formTitle}} Jabatan</span>
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-text-field v-model="form.kode_promo" label="Kode Promo" required></v-text-field>
-            <v-text-field v-model="form.jenis_promo" label="Jenis Promo" required></v-text-field>
-            <v-text-field v-model="form.jumlah_potongan" label="Jumlah Potongan" required></v-text-field>
-            <v-text-field v-model="form.keterangan" label="Keterangan" required></v-text-field>
-            <v-text-field v-model="form.status_promo" label="Status Promo" required></v-text-field>
+            <v-text-field v-model="form.nama_role" label="Jabatan" required></v-text-field>
+            <v-text-field v-model="form.peranan" label="Peranan" required></v-text-field>
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -59,7 +56,7 @@
         <v-card-title>
           <span class="headline">warning!</span>
         </v-card-title>
-        <v-card-text> Anda yakin ingin menghapus promo ini? </v-card-text>
+        <v-card-text> Anda yakin ingin menghapus jabatan ini? </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="dialogConfirm = false">
@@ -90,21 +87,15 @@ export default {
       dialog: false,
       dialogConfirm: false,
       headers: [
-        { text: "Kode Promo", align: "start", sortable: true, value: "kode_promo"},
-        { text: "Jenis Promo", value: 'jenis_promo'},
-        { text: "Jumlah Potongan", value: 'jumlah_potongan'},
-        { text: "Keterangan", value: 'keterangan'},
-        { text: "Status Promo", value: 'status_promo'},
+        { text: "Jabatan", align: "start", sortable: true, value: "nama_role"},
+        { text: "Tugas", value: 'peranan'},
         { text: "Action", value:'actions'},
       ],
       course: new FormData,
       courses: [],
       form:{
-        kode_promo: null,
-        jenis_promo: null,
-        jumlah_potongan: null,
-        keterangan: null,
-        status_promo: null,
+        nama_role: null,
+        peranan: null,
       },
       deleteId: '',
       editId: ''
@@ -122,7 +113,7 @@ export default {
     },
 
     readData(){
-      var url = this.$api + '/promo';
+      var url = this.$api + '/role';
       this.$http.get(url, {
         headers: {
           'Authorization' : 'Bearer ' + localStorage.getItem('token')
@@ -133,13 +124,10 @@ export default {
     },
 
     save(){
-      this.course.append('kode_promo',this.form.kode_promo);
-      this.course.append('jenis_promo',this.form.jenis_promo);
-      this.course.append('jumlah_potongan',this.form.jumlah_potongan);
-      this.course.append('keterangan', this.form.keterangan);
-      this.course.append('status_promo',this.form.status_promo)
+      this.course.append('nama_role',this.form.nama_role);
+      this.course.append('peranan',this.form.peranan);
 
-      var url= this.$api + '/promo/'
+      var url= this.$api + '/role/'
       this.load = true;
       this.$http.post(url, this.course, {
         headers: {
@@ -163,13 +151,11 @@ export default {
 
     update(){
       let newData = {
-        kode_promo : this.form.kode_promo,
-        jenis_promo : this.form.jenis_promo,
-        jumlah_potongan : this.form.jumlah_potongan,
-        keterangan: this.form.keterangan,
-        status_promo: this.form.status_promo
+        nama_role : this.form.nama_role,
+        peranan : this.form.peranan,
+        
       };
-      var url = this.$api + '/promo/' + this.editId;
+      var url = this.$api + '/role/' + this.editId;
       this.load = true;
       this.$http.put(url, newData, {
         headers: {
@@ -194,7 +180,7 @@ export default {
 
     deleteData() {
       //mengahapus data
-      var url = this.$api + '/promo/' + this.deleteId;
+      var url = this.$api + '/role/' + this.deleteId;
       //data dihapus berdasarkan id
       this.$http.delete(url, {
           headers: {
@@ -221,17 +207,14 @@ export default {
 
     editHandler(item){
       this.inputType = 'Ubah';
-      this.editId = item.id_promo;
-      this.form.kode_promo = item.kode_promo;
-      this.form.jenis_promo = item.jenis_promo;
-      this.form.jumlah_potongan = item.jumlah_potongan;
-      this.form.keterangan = item.keterangan;
-      this.form.status_promo = item.status_promo
+      this.editId = item.id_role;
+      this.form.nama_role = item.nama_role;
+      this.form.peranan = item.peranan;
       this.dialog = true;
     },
 
-    deleteHandler(id_promo) {
-      this.deleteId = id_promo;
+    deleteHandler(id_role) {
+      this.deleteId = id_role;
       this.dialogConfirm = true;
     },
     close() {
@@ -249,11 +232,8 @@ export default {
     },
     resetForm() {
       this.form = {
-        kode_promo: null,
-        jenis_promo: null,
-        jumlah_potongan: null,
-        keterangan: null,
-        status_promo: null,
+        nama_role: null,
+        peranan: null,
       };
     },
   },
