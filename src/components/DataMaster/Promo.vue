@@ -17,7 +17,7 @@
         <v-btn color="blue" dark @click="dialog = true"> Tambah </v-btn>
 
       </v-card-title>
-      <v-data-table :headers="headers" :items="courses" :search="search">
+      <v-data-table :headers="headers" :items="promos" :search="search">
 
         <template v-slot:[`item.actions`]="{item}">
                 <v-btn icon small class="mr-2" @click="editHandler(item)">
@@ -42,7 +42,7 @@
             <v-text-field v-model="form.jenis_promo" label="Jenis Promo" required></v-text-field>
             <v-text-field v-model="form.jumlah_potongan" label="Jumlah Potongan" required></v-text-field>
             <v-text-field v-model="form.keterangan" label="Keterangan" required></v-text-field>
-            <v-text-field v-model="form.status_promo" label="Status Promo" required></v-text-field>
+            <v-select :items="statusPromo" v-model="form.status_promo" label="status promo" item-value="value" item-text="text" ></v-select>
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -89,6 +89,10 @@ export default {
       search: null,
       dialog: false,
       dialogConfirm: false,
+      statusPromo: [
+        {text: "Aktif", value:"aktif"},
+        {text: "Non aktif", value:"non-aktif"},
+      ],
       headers: [
         { text: "Kode Promo", align: "start", sortable: true, value: "kode_promo"},
         { text: "Jenis Promo", value: 'jenis_promo'},
@@ -97,8 +101,8 @@ export default {
         { text: "Status Promo", value: 'status_promo'},
         { text: "Action", value:'actions'},
       ],
-      course: new FormData,
-      courses: [],
+      promo: new FormData,
+      promos: [],
       form:{
         kode_promo: null,
         jenis_promo: null,
@@ -128,20 +132,20 @@ export default {
           'Authorization' : 'Bearer ' + localStorage.getItem('token')
         }
       }).then(response => {
-        this.courses = response.data.data;
+        this.promos = response.data.data;
       })
     },
 
     save(){
-      this.course.append('kode_promo',this.form.kode_promo);
-      this.course.append('jenis_promo',this.form.jenis_promo);
-      this.course.append('jumlah_potongan',this.form.jumlah_potongan);
-      this.course.append('keterangan', this.form.keterangan);
-      this.course.append('status_promo',this.form.status_promo)
+      this.promo.append('kode_promo',this.form.kode_promo);
+      this.promo.append('jenis_promo',this.form.jenis_promo);
+      this.promo.append('jumlah_potongan',this.form.jumlah_potongan);
+      this.promo.append('keterangan', this.form.keterangan);
+      this.promo.append('status_promo',this.form.status_promo)
 
       var url= this.$api + '/promo/'
       this.load = true;
-      this.$http.post(url, this.course, {
+      this.$http.post(url, this.promo, {
         headers: {
           'Authorization' : 'Bearer ' + localStorage.getItem('token'),
         }

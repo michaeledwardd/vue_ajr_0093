@@ -17,7 +17,7 @@
         <v-btn color="blue" dark @click="dialog = true"> Tambah </v-btn>
 
       </v-card-title>
-      <v-data-table :headers="headers" :items="courses" :search="search">
+      <v-data-table :headers="headers" :items="roles" :search="search">
 
         <template v-slot:[`item.actions`]="{item}">
                 <v-btn icon small class="mr-2" @click="editHandler(item)">
@@ -91,8 +91,8 @@ export default {
         { text: "Tugas", value: 'peranan'},
         { text: "Action", value:'actions'},
       ],
-      course: new FormData,
-      courses: [],
+      role: new FormData,
+      roles: [],
       form:{
         nama_role: null,
         peranan: null,
@@ -119,17 +119,17 @@ export default {
           'Authorization' : 'Bearer ' + localStorage.getItem('token')
         }
       }).then(response => {
-        this.courses = response.data.data;
+        this.roles = response.data.data;
       })
     },
 
     save(){
-      this.course.append('nama_role',this.form.nama_role);
-      this.course.append('peranan',this.form.peranan);
+      this.role.append('nama_role',this.form.nama_role);
+      this.role.append('peranan',this.form.peranan);
 
       var url= this.$api + '/role/'
       this.load = true;
-      this.$http.post(url, this.course, {
+      this.$http.post(url, this.role, {
         headers: {
           'Authorization' : 'Bearer ' + localStorage.getItem('token'),
         }

@@ -63,6 +63,34 @@ const router = new VueRouter({
                     meta: {title : 'Driver'},
                     component: importComponent('DataMaster/Driver'),
                 },
+                //customer
+                {
+                    path: '/customer',
+                    name: 'Customer',
+                    meta: {title : 'Customer'},
+                    component: importComponent('DataMaster/Customer'),
+                },
+                //transaksi
+                {
+                    path: '/transaksi',
+                    name: 'Transaksi',
+                    meta: {title : 'Transaksi'},
+                    component: importComponent('DataMaster/Transaksi'),
+                },
+                //mitra
+                {
+                    path: '/mitra',
+                    name: 'Mitra',
+                    meta: {title : 'Mitra'},
+                    component: importComponent('DataMaster/Mitra'),
+                },
+                //mitra
+                {
+                    path: '/jadwal',
+                    name: 'Jadwal',
+                    meta: {title : 'Jadwal'},
+                    component: importComponent('DataMaster/Jadwal'),
+                },
             ],
         },
 

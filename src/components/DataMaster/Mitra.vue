@@ -1,6 +1,6 @@
 <template>
   <v-main class="list">
-    <h3 class="text font-weight-medium mb-5">Jadwal Kerja Pegawai AJR</h3>
+    <h3 class="text font-weight-medium mb-5">Data Mitra</h3>
     
     <v-card>
       <v-card-title>
@@ -17,39 +17,38 @@
         <v-btn color="blue" dark @click="dialog = true"> Tambah </v-btn>
 
       </v-card-title>
-      <v-data-table :headers="headers" :items="detailshifts" :search="search">
+      <v-data-table :headers="headers" :items="mitras" :search="search">
 
         <template v-slot:[`item.actions`]="{item}">
                 <v-btn icon small class="mr-2" @click="editHandler(item)">
                   <v-icon color="red">mdi-pencil</v-icon>
                 </v-btn>
-                <v-btn icon small @click="deleteHandler(item.id_detail_shift)">
+                <!-- <v-btn icon small @click="deleteHandler(item.id_mitra)">
                      <v-icon color="green">mdi-delete</v-icon>
-                </v-btn>
+                </v-btn> -->
             </template>
 
-        <!-- <template v-slot:[`item.actions`]="{ item }">
-          <v-btn small class="mr-2" @click="editHandler(item)"> edit </v-btn>
-          <v-btn small @click="deleteHandler(item.id)"> delete </v-btn>
-        </template> -->
       </v-data-table>
     </v-card>
     
     <v-dialog v-model="dialog" persistent max-width="600px">
       <v-card>
         <v-card-title>
-          <span class="headline">{{formTitle}} detailshift</span>
+          <span class="headline">{{formTitle}} Data Mitra</span>
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-select :items="jadwals" v-model="form.id_jadwal" label="Hari Kerja" item-value="id_jadwal" :item-text="item => item.hari_kerja +' - '+ item.jenis_shift" ></v-select>
-            <v-select :items="pegawais" v-model="form.id_pegawai" label="Nama Pegawai" item-value="id_pegawai" item-text="nama_pegawai" ></v-select>
+            <v-text-field v-model="form.nama_mitra" label="Nama Mitra" required></v-text-field>
+            <v-text-field v-model="form.alamat" label="Alamat Mitra" required></v-text-field>
+            <v-text-field v-model="form.nomor_ktp" label="Nomor KTP" required></v-text-field>
+            <v-text-field v-model="form.nomor_telepon" label="Nomor Telepon" required></v-text-field>
+             <v-select :items="statusAktif" v-model="form.is_aktif" label="Status Mitra" item-value="value" item-text="text" ></v-select>
             
           </v-container>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="cancel"> Cancel </v-btn>
+          <v-btn color="red darken-1" text @click="cancel"> Cancel </v-btn>
           <v-btn color="blue darken-1" text @click="setForm"> Save </v-btn>
         </v-card-actions>
       </v-card>
@@ -61,7 +60,7 @@
         <v-card-title>
           <span class="headline">warning!</span>
         </v-card-title>
-        <v-card-text> Anda yakin ingin menghapus kelas ini? </v-card-text>
+        <v-card-text> Anda yakin ingin menghapus mitra ini? </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="dialogConfirm = false">
@@ -91,20 +90,26 @@ export default {
       search: null,
       dialog: false,
       dialogConfirm: false,
+      statusAktif:[
+        { text: "Aktif", value: 1},
+        { text: "Tidak Aktif", value: 0},
+      ],
       headers: [
-        { text: "Hari Kerja", align: "start", sortable: true, value: "hari_kerja"},
-        { text: "Jenis Shift", value: 'jenis_shift'},
-        { text: "Nama Pegawai", value: 'nama_pegawai'},
-        { text: "Jabatan", value: 'nama_role'},
+        { text: "Nama Mitra", align: "start", sortable: true, value: "nama_mitra"},
+        { text: "Alamat", value: 'alamat'},
+        { text: "Nomor KTP", value: 'nomor_ktp'},
+        { text: "Nomor Telepon", value: 'nomor_telepon'},
+        { text: "Status Aktif", value: 'is_aktif'},
         { text: "Action", value:'actions'},
       ],
-      detailshift: new FormData,
-      detailshifts: [],
-      pegawais: [],
-      jadwals: [],
+      mitra: new FormData,
+      mitras: [],
       form:{
-        id_jadwal: null,
-        id_pegawai: null,
+        nama_mitra: null,
+        alamat: null,
+        nomor_ktp: null,
+        nomor_telepon: null,
+        is_aktif: null,
       },
       deleteId: '',
       editId: ''
@@ -122,45 +127,26 @@ export default {
     },
 
     readData(){
-      var url = this.$api + '/detailshift';
+      var url = this.$api + '/mitra';
       this.$http.get(url, {
         headers: {
           'Authorization' : 'Bearer ' + localStorage.getItem('token')
         }
       }).then(response => {
-        this.detailshifts = response.data.data;
-      })
-    },
-
-    readDataJadwal(){
-      var url = this.$api + '/jadwal';
-      this.$http.get(url, {
-        headers: {
-          'Authorization' : 'Bearer ' + localStorage.getItem('token')
-        }
-      }).then(response => {
-        this.jadwals = response.data.data;
-      })
-    },
-
-    readDataPegawai(){
-      var url = this.$api + '/pegawai';
-      this.$http.get(url, {
-        headers: {
-          'Authorization' : 'Bearer ' + localStorage.getItem('token')
-        }
-      }).then(response => {
-        this.pegawais = response.data.data;
+        this.mitras = response.data.data;
       })
     },
 
     save(){
-      this.detailshift.append('id_jadwal',this.form.id_jadwal);
-      this.detailshift.append('id_pegawai',this.form.id_pegawai);
+      this.mitra.append('nama_mitra',this.form.nama_mitra);
+      this.mitra.append('alamat',this.form.alamat);
+      this.mitra.append('nomor_ktp',this.form.nomor_ktp);
+      this.mitra.append('nomor_telepon', this.form.nomor_telepon);
+      this.mitra.append('is_aktif',this.form.is_aktif)
 
-      var url= this.$api + '/detailshift/'
+      var url= this.$api + '/mitra/'
       this.load = true;
-      this.$http.post(url, this.detailshift, {
+      this.$http.post(url, this.mitra, {
         headers: {
           'Authorization' : 'Bearer ' + localStorage.getItem('token'),
         }
@@ -182,10 +168,13 @@ export default {
 
     update(){
       let newData = {
-        id_jadwal : this.form.id_jadwal,
-        id_pegawai : this.form.id_pegawai
+        nama_mitra : this.form.nama_mitra,
+        alamat : this.form.alamat,
+        nomor_ktp : this.form.nomor_ktp,
+        nomor_telepon: this.form.nomor_telepon,
+        is_aktif: this.form.is_aktif
       };
-      var url = this.$api + '/detailshift/' + this.editId;
+      var url = this.$api + '/mitra/' + this.editId;
       this.load = true;
       this.$http.put(url, newData, {
         headers: {
@@ -210,7 +199,7 @@ export default {
 
     deleteData() {
       //mengahapus data
-      var url = this.$api + '/detailshift/' + this.deleteId;
+      var url = this.$api + '/mitra/' + this.deleteId;
       //data dihapus berdasarkan id
       this.$http.delete(url, {
           headers: {
@@ -237,14 +226,17 @@ export default {
 
     editHandler(item){
       this.inputType = 'Ubah';
-      this.editId = item.id_detail_shift;
-      this.form.id_jadwal = item.id_jadwal;
-      this.form.id_pegawai = item.id_pegawai;
+      this.editId = item.id_mitra;
+      this.form.nama_mitra = item.nama_mitra;
+      this.form.alamat = item.alamat;
+      this.form.nomor_ktp = item.nomor_ktp;
+      this.form.nomor_telepon = item.nomor_telepon;
+      this.form.is_aktif = item.is_aktif;
       this.dialog = true;
     },
 
-    deleteHandler(id_detail_shift) {
-      this.deleteId = id_detail_shift;
+    deleteHandler(id_mitra) {
+      this.deleteId = id_mitra;
       this.dialogConfirm = true;
     },
     close() {
@@ -262,8 +254,11 @@ export default {
     },
     resetForm() {
       this.form = {
-        id_jadwal: null,
-        id_pegawai: null,
+        nama_mitra: null,
+        alamat: null,
+        nomor_ktp: null,
+        nomor_telepon: null,
+        is_aktif: null,
       };
     },
   },
@@ -273,8 +268,6 @@ export default {
     },
   },
   mounted() {
-    this.readDataJadwal();
-    this.readDataPegawai();
     this.readData();
   },
 };

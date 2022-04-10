@@ -3,8 +3,11 @@
     <v-navigation-drawer v-model="drawer" class="fullheight, blue" width="256" app>
       <v-list-item>
         <v-list-item-content>
+          <v-img :src="require('@/assets/logo.png')" style="max-width:50px; float:left"/>
+          <div style="float:left">
           <v-list-item-title class="title"> Atma Jaya Rental </v-list-item-title>
           <v-list-item-subtitle class="subtitle"> Rentalan Terpercaya </v-list-item-subtitle>
+          </div>
         </v-list-item-content>
       </v-list-item>
       
@@ -28,7 +31,9 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <VSpacer />
       <v-toolbar-items>
+         <v-btn text router @click = "btnLogout"><v-icon>mdi-account</v-icon></v-btn>
         <v-btn text router @click = "btnLogout"><v-icon>mdi-power</v-icon></v-btn>
+       
       </v-toolbar-items>
     </v-app-bar>
     <div class="fullheigh pa-2">
@@ -47,7 +52,8 @@ export default {
       items: [
         { icon : 'mdi-view-dashboard-outline', title: "Dashboard", to: "/dashboard" },
         { icon : "mdi-brightness-percent", title: "Promo", to:"/promo" },
-        { icon : "mdi-clock-outline", title: "Jadwal Pegawai", to:"/detailshift"},
+        { icon : "mdi-calendar-clock", title: "Jadwal Pegawai", to:"/detailshift"},
+        { icon : "mdi-clock-time-nine", title: "Waktu Kerja", to:"/jadwal"},
         { icon : "mdi-seat-recline-extra", title: "Role", to:"/role"},
         { icon : "mdi-account-group", title: "Pegawai", to:"/pegawai"},
         { icon : "mdi-car", title: "Mobil", to:"/mobil"},
