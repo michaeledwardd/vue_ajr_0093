@@ -66,8 +66,8 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-text-field disabled v-model="form.nama_pegawai" label="Nama"></v-text-field>
-            <v-text-field disabled v-model="form.foto_pegawai" label="Foto"></v-text-field>
+            <v-text-field readonly v-model="form.nama_pegawai" label="Nama"></v-text-field>
+            <v-text-field readonly v-model="form.foto_pegawai" label="Foto"></v-text-field>
           </v-container>
         </v-card-text>
         <v-card-actions>

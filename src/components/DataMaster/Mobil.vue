@@ -18,7 +18,14 @@
 
       </v-card-title>
       <v-data-table :headers="headers" :items="mobils" :search="search">
-
+        <template v-slot:[`item.status_ketersediaan`]="{ item }">
+            <span v-if="item.status_ketersediaan == 'tersedia' ">
+              <v-chip color="green">Tersedia</v-chip>
+            </span>
+            <span v-if="item.status_ketersediaan == 'tidak tersedia' ">
+              <v-chip color="red">Tidak Tersedia</v-chip>
+            </span>
+          </template>
         <template v-slot:[`item.actions`]="{item}">
                 <v-btn icon small class="mr-2" @click="editHandler(item)">
                   <v-icon color="red">mdi-pencil</v-icon>

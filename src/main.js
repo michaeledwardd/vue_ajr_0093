@@ -8,7 +8,7 @@ Vue.config.productionTip = false
 
 Vue.prototype.$http = axios;
 Vue.prototype.$api = 'http://127.0.0.1:8000/api';
-
+Vue.prototype.$baseUrl = 'http://127.0.0.1:8000';
 new Vue({
   vuetify,
   router,
