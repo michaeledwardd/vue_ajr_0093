@@ -18,7 +18,42 @@
 
       </v-card-title>
       <v-data-table :headers="headers" :items="drivers" :search="search">
+         <template v-slot:[`item.foto_driver`]="{item}">
+          <v-img :src="$baseUrl+'/storage/'+item.foto_driver" height="100px" width="100px" style="object-fit:cover"/>  
+        </template>
 
+        <template v-slot:[`item.upload_bebas_napza`]="{item}">
+          <v-img :src="$baseUrl+'/storage/'+item.upload_bebas_napza" height="100px" width="100px" style="object-fit:cover"/>  
+        </template>
+
+         <template v-slot:[`item.upload_sim`]="{item}">
+          <v-img :src="$baseUrl+'/storage/'+item.upload_sim" height="100px" width="100px" style="object-fit:cover"/>  
+        </template>
+
+         <template v-slot:[`item.upload_sehat_jiwa`]="{item}">
+          <v-img :src="$baseUrl+'/storage/'+item.upload_sehat_jiwa" height="100px" width="100px" style="object-fit:cover"/>  
+        </template>
+
+         <template v-slot:[`item.upload_sehat_jasmani`]="{item}">
+          <v-img :src="$baseUrl+'/storage/'+item.upload_sehat_jasmani" height="100px" width="100px" style="object-fit:cover"/>  
+        </template>
+
+         <template v-slot:[`item.upload_skck`]="{item}">
+          <v-img :src="$baseUrl+'/storage/'+item.upload_skck" height="100px" width="100px" style="object-fit:cover"/>  
+        </template>
+
+        <template v-slot:[`item.is_aktif`]="{item}">
+          <span v-if="item.is_aktif == 1"><v-chip color="green">Aktif</v-chip> </span>
+          <span v-else><v-chip color="red">Tidak Aktif</v-chip> </span>
+        </template>
+         <template v-slot:[`item.status_tersedia`]="{ item }">
+            <span v-if="item.status_tersedia == 'tersedia' ">
+              <v-chip color="yellow">Tersedia</v-chip>
+            </span>
+            <span v-if="item.status_tersedia == 'tidak tersedia' ">
+              <v-chip color="blue">Tidak Tersedia</v-chip>
+            </span>
+          </template>
         <template v-slot:[`item.actions`]="{item}">
                 <v-btn icon small class="mr-2" @click="editHandler(item)">
                   <v-icon color="red">mdi-pencil</v-icon>
@@ -39,23 +74,30 @@
         <v-card-text>
           <v-container>
             <v-text-field v-model="form.nama_driver" label="Nama Driver" required></v-text-field>
-            <v-text-field v-model="form.jenis_kelamin" label="Jenis Kelamin" required></v-text-field>
+           <v-select :items="jenisKelamin" v-model="form.jenis_kelamin" label="Jenis Kelamin" item-value="value" item-text="text" ></v-select>
             <v-text-field v-model="form.alamat" label="Alamat" required></v-text-field>
             <v-text-field v-model="form.email_driver" label="Email Driver" required></v-text-field>
             <v-text-field v-model="form.password" label="Password" required></v-text-field>
-            <v-text-field v-model="form.foto_driver" label="Foto Pegawai" required></v-text-field>
+
+            <v-file-input rounded filled prepend-icon="mdi-camera" label="Foto Driver" id="fotoDriver" ref="filefotoDriver"></v-file-input>
+            
             <v-select :items="statusTersedia" v-model="form.status_tersedia" label="Status Ketersediaan" item-value="value" item-text="text" ></v-select>
             <v-select :items="statusBerkas" v-model="form.status_berkas" label="Status Berkas" item-value="value" item-text="text" ></v-select>
              <v-select :items="statusAktif" v-model="form.is_aktif" label="Status Aktif" item-value="value" item-text="text" ></v-select>
             <v-text-field v-model="form.biaya_sewa_driver" label="Biaya sewa Driver" required></v-text-field>
             <v-text-field v-model="form.no_telp" label="Nomor Telepon" required></v-text-field>
             <v-text-field type="date" v-model="form.tgl_lahir" label="Tanggal Lahir" required></v-text-field>
-             <v-select :items="mahirInggris" v-model="form.mahir_inggris" label="Mahir Inggris" item-value="value" item-text="text" ></v-select>
-            <v-text-field v-model="form.upload_sim" label="Surat Ijin Mengemudi" required></v-text-field>
-            <v-text-field v-model="form.upload_bebas_napza" label="Surat Bebas Napza" required></v-text-field>
-            <v-text-field v-model="form.upload_sehat_jiwa" label="Surat Sehat Jiwa" required></v-text-field>
-            <v-text-field v-model="form.upload_sehat_jasmani" label="Surat Sehat Jasmani" required></v-text-field>
-            <v-text-field v-model="form.upload_skck" label="Surat SKCK" required></v-text-field>
+            <v-select :items="mahirInggris" v-model="form.mahir_inggris" label="Mahir Inggris" item-value="value" item-text="text" ></v-select>
+            <v-file-input rounded filled prepend-icon="mdi-camera" label="Foto SIM" id="fotoSIM" ref="filefotoSIM"></v-file-input>
+            
+            <v-file-input rounded filled prepend-icon="mdi-camera" label="Foto Bebas Napza" id="fotoNapza" ref="filefotoNapza"></v-file-input>
+
+            <v-file-input rounded filled prepend-icon="mdi-camera" label="Foto Sehat Jiwa" id="fotoSehatJiwa" ref="filefotoSehatJiwa"></v-file-input>
+
+            <v-file-input rounded filled prepend-icon="mdi-camera" label="Foto Sehat Jasmani" id="fotoSehatJasmani" ref="filefotoSehatJasmani"></v-file-input>
+
+            <v-file-input rounded filled prepend-icon="mdi-camera" label="Foto SKCK" id="fotoSKCK" ref="filefotoSKCK"></v-file-input>
+
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -74,13 +116,36 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-text-field disabled v-model="form.mahir_inggris" label="Mahir Inggris" required></v-text-field>
-            <v-text-field disabled v-model="form.upload_sim" label="Surat Ijin Mengemudi" required></v-text-field>
-            <v-text-field disabled v-model="form.upload_bebas_napza" label="Surat Bebas Napza" required></v-text-field>
-            <v-text-field disabled v-model="form.upload_sehat_jiwa" label="Surat Sehat Jiwa" required></v-text-field>
-            <v-text-field disabled v-model="form.upload_sehat_jasmani" label="Surat Sehat Jasmani" required></v-text-field>
-            <v-text-field disabled v-model="form.upload_skck" label="Surat SKCK" required></v-text-field>
-            <v-text-field disabled v-model="form.status_berkas" label="Status Berkas" required></v-text-field>
+            <v-flex align-center>
+                <v-img width="550px"
+                    :src="previewImageUrl == '' ? $baseUrl+'/storage/'+form.foto_driver : previewImageUrl"
+                    id="previewImage" class="mb-5"></v-img>
+            </v-flex>
+            <v-flex align-center>
+                <v-img width="550px"
+                    :src="previewImageUrl == '' ? $baseUrl+'/storage/'+form.upload_sim : previewImageUrl"
+                    id="previewImage" class="mb-5"></v-img>
+            </v-flex>
+            <v-flex align-center>
+                <v-img width="550px"
+                    :src="previewImageUrl == '' ? $baseUrl+'/storage/'+form.upload_bebas_napza : previewImageUrl"
+                    id="previewImage" class="mb-5"></v-img>
+            </v-flex>
+            <v-flex align-center>
+                <v-img width="550px"
+                    :src="previewImageUrl == '' ? $baseUrl+'/storage/'+form.upload_sehat_jiwa : previewImageUrl"
+                    id="previewImage" class="mb-5"></v-img>
+            </v-flex>
+            <v-flex align-center>
+                <v-img width="550px"
+                    :src="previewImageUrl == '' ? $baseUrl+'/storage/'+form.upload_sehat_jasmani : previewImageUrl"
+                    id="previewImage" class="mb-5"></v-img>
+            </v-flex>
+            <v-flex align-center>
+                <v-img width="550px"
+                    :src="previewImageUrl == '' ? $baseUrl+'/storage/'+form.upload_skck : previewImageUrl"
+                    id="previewImage" class="mb-5"></v-img>
+            </v-flex>
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -123,10 +188,15 @@ export default {
       snackbar: false,
       error_message: '',
       color: '',
+      previewImageUrl: '',
       search: null,
       dialog: false,
       dialogData: false,
       dialogConfirm: false,
+      jenisKelamin: [
+        { text: "Laki Laki", value: "laki-laki"},
+        { text: "Perempuan", value: "perempuan"},
+      ],
       statusTersedia:[
         {text:"Tersedia", value:"tersedia"},
         {text:"Tidak Tersedia", value:"tidak tersedia"},
@@ -147,10 +217,18 @@ export default {
         { text: "ID Driver", value:'id_driver'},
         { text: "Nama Driver", align: "start", sortable: true, value: "nama_driver"},
         { text: "Jenis Kelamin", value: "jenis_kelamin"},
-        { text: "Biaya Sewa Driver", value: "biaya_sewa_driver"},
         { text: "Tanggal Lahir", value: "tgl_lahir"},
-        { text: "Status", value: "status_tersedia"},
+        { text: "Tersedia", value: "status_tersedia"},
+        { text: "Aktif", value: 'is_aktif'},
         { text: "Nomor Telepon", value: "no_telp"},
+        { text: "Status Berkas", value: "status_berkas"},
+        { text: "Rerata rating", value: "rerata_rating"},
+        { text: "Foto Driver", value: "foto_driver"},
+        { text: "SIM", value: "upload_sim"},
+        { text: "Bebas Napza", value: "upload_bebas_napza"},
+        { text: "Sehat Jiwa", value: "upload_sehat_jiwa"},
+        { text: "Sehat Jasmani", value: "upload_sehat_jasmani"},
+        { text: "SKCK", value: "upload_skck"},
         { text: "Action", value:'actions'},
       ],
       driver: new FormData,
@@ -174,7 +252,6 @@ export default {
         upload_sehat_jiwa: null,
         upload_skck: null,
         upload_sehat_jasmani: null,
-        
       },
       deleteId: '',
       showId: '',
@@ -209,7 +286,11 @@ export default {
       this.driver.append('alamat',this.form.alamat);
       this.driver.append('email_driver',this.form.email_driver);
       this.driver.append('password',this.form.password);
-      this.driver.append('foto_driver',this.form.foto_driver);
+
+      var inputFotoDriver = document.getElementById('fotoDriver'),
+      dataFileDriver = inputFotoDriver.files[0];
+      this.driver.append('foto_driver',dataFileDriver);
+
       this.driver.append('status_tersedia',this.form.status_tersedia);
       this.driver.append('status_berkas',this.form.status_berkas);
       this.driver.append('is_aktif',this.form.is_aktif);
@@ -217,11 +298,26 @@ export default {
       this.driver.append('no_telp',this.form.no_telp);
       this.driver.append('tgl_lahir',this.form.tgl_lahir);
       this.driver.append('mahir_inggris',this.form.mahir_inggris);
-      this.driver.append('upload_sim',this.form.upload_sim);
-      this.driver.append('upload_bebas_napza',this.form.upload_bebas_napza);
-      this.driver.append('upload_sehat_jiwa',this.form.upload_sehat_jiwa);
-      this.driver.append('upload_sehat_jasmani',this.form.upload_sehat_jasmani);
-      this.driver.append('upload_skck',this.form.upload_skck);
+
+      var inputFotoSIM = document.getElementById('fotoSIM'),
+      dataFileSIM = inputFotoSIM.files[0];
+      this.driver.append('upload_sim',dataFileSIM);
+
+      var inputfotoNapza = document.getElementById('fotoNapza'),
+      dataFileNapza = inputfotoNapza.files[0];
+      this.driver.append('upload_bebas_napza',dataFileNapza);
+
+      var inputfotoSehatJiwa = document.getElementById('fotoSehatJiwa'),
+      dataFileSehatJiwa = inputfotoSehatJiwa.files[0];
+      this.driver.append('upload_sehat_jiwa',dataFileSehatJiwa);
+
+      var inputfotoSehatJasmani = document.getElementById('fotoSehatJasmani'),
+      dataFileSehatJasmani = inputfotoSehatJasmani.files[0];
+      this.driver.append('upload_sehat_jasmani',dataFileSehatJasmani);
+
+      var inputfotoSKCK = document.getElementById('fotoSKCK'),
+      dataFileSKCK = inputfotoSKCK.files[0];
+      this.driver.append('upload_skck',dataFileSKCK);
     
       var url= this.$api + '/driver/'
       this.load = true;
@@ -245,30 +341,64 @@ export default {
       });
     },
 
+    onPreviewImage(e) {
+      this.previewImageUrl = URL.createObjectURL(e)
+    },
+
     update(){
-      let newData = {
-        nama_driver : this.form.nama_driver,
-        jenis_kelamin : this.form.jenis_kelamin,
-        alamat : this.form.alamat,
-        email_driver : this.form.email_driver,
-        password : this.form.password,
-        foto_driver : this.form.foto_driver,
-        status_tersedia : this.form.status_tersedia,
-        status_berkas : this.form.status_berkas,
-        is_aktif : this.form.is_aktif,
-        biaya_sewa_driver : this.form.biaya_sewa_driver,
-        no_telp : this.form.no_telp,
-        tgl_lahir : this.form.tgl_lahir,
-        mahir_inggris : this.form.mahir_inggris,
-        upload_sim : this.form.upload_sim,
-        upload_bebas_napza : this.form.upload_bebas_napza,
-        upload_sehat_jiwa : this.form.upload_sehat_jiwa,
-        upload_sehat_jasmani : this.form.upload_sehat_jasmani,
-        upload_skck : this.form.upload_skck
-      };
+      var data = new FormData(),
+      inputFotoDriver = document.getElementById('fotoDriver'),
+      dataFileDriver = inputFotoDriver.files[0];
+
+        data.append('nama_driver', this.form.nama_driver);
+        data.append('jenis_kelamin', this.form.jenis_kelamin);
+        data.append('alamat', this.form.alamat);
+        data.append('email_driver', this.form.email_driver);
+        data.append('password', this.form.password);
+        if(dataFileDriver){
+          data.append('foto_driver',dataFileDriver);
+        }
+        data.append('status_tersedia', this.form.status_tersedia);
+        data.append('status_berkas', this.form.status_berkas);
+        data.append('is_aktif', this.form.is_aktif);
+        data.append('biaya_sewa_driver', this.form.biaya_sewa_driver);
+        data.append('no_telp', this.form.no_telp);
+        data.append('tgl_lahir', this.form.tgl_lahir);
+        data.append('mahir_inggris', this.form.mahir_inggris);
+
+        var inputFotoSIM = document.getElementById('fotoSIM'),
+        dataFileSIM = inputFotoSIM.files[0];
+        if(dataFileSIM){
+          data.append('upload_sim',dataFileSIM);
+        }
+
+        var inputFotoSehatJiwa = document.getElementById('fotoSehatJiwa'),
+        dataFileSehatJiwa = inputFotoSehatJiwa.files[0];
+        if(dataFileSehatJiwa){
+          data.append('upload_sehat_jiwa',dataFileSehatJiwa);
+        }
+
+        var inputFotoNapza = document.getElementById('fotoNapza'),
+        dataFileNapza = inputFotoNapza.files[0];
+        if(dataFileNapza){
+          data.append('upload_bebas_napza',dataFileNapza);
+        }
+
+        var inputFotoSehatJasmani = document.getElementById('fotoSehatJasmani'),
+        dataFileSehatJasmani = inputFotoSehatJasmani.files[0];
+        if(dataFileSehatJasmani){
+          data.append('upload_sehat_jasmani',dataFileSehatJasmani);
+        }
+
+        var inputFotoSKCK = document.getElementById('fotoSKCK'),
+        dataFileSKCK = inputFotoSKCK.files[0];
+        if(dataFileSKCK){
+          data.append('upload_skck',dataFileSKCK);
+        }
+ 
       var url = this.$api + '/driver/' + this.editId;
       this.load = true;
-      this.$http.put(url, newData, {
+      this.$http.post(url, data, {
         headers: {
           'Authorization' : 'Bearer ' + localStorage.getItem('token')
         }
@@ -341,8 +471,7 @@ export default {
     },
     showHandler(item){
         this.editId = item.id_driver;
-        this.form.status_berkas = item.status_berkas;
-        this.form.mahir_inggris = item.mahir_inggris;
+        this.form.foto_driver = item.foto_driver;
         this.form.upload_sim = item.upload_sim;
         this.form.upload_bebas_napza = item.upload_bebas_napza;
         this.form.upload_sehat_jiwa = item.upload_sehat_jiwa;

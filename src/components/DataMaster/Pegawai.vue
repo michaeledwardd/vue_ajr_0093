@@ -19,7 +19,13 @@
 
       </v-card-title>
       <v-data-table :headers="headers" :items="pegawais" :search="search">
-
+        <template v-slot:[`item.is_aktif`]="{item}">
+          <span v-if="item.is_aktif == 1"><v-chip color="green">Aktif</v-chip> </span>
+          <span v-else><v-chip color="red">Tidak Aktif</v-chip> </span>
+        </template>
+        <template v-slot:[`item.foto_pegawai`]="{item}">
+          <v-img :src="$baseUrl+'/storage/'+item.foto_pegawai" height="100px" width="100px" style="object-fit:cover"/>  
+        </template>
         <template v-slot:[`item.actions`]="{item}">
                 <v-btn icon small class="mr-2" @click="editHandler(item)">
                   <v-icon color="red">mdi-pencil</v-icon>
@@ -27,8 +33,7 @@
                 <v-btn icon small @click="showHandler(item)">
                      <v-icon color="black">mdi-view-list</v-icon>
                 </v-btn>
-            </template>
-
+        </template>
       </v-data-table>
     </v-card>
     
@@ -40,7 +45,7 @@
         <v-card-text>
           <v-container>
             <v-text-field v-model="form.nama_pegawai" label="Nama Pegawai" required></v-text-field>
-            <v-text-field v-model="form.foto_pegawai" label="Foto Pegawai" required></v-text-field>
+            <v-file-input rounded filled prepend-icon="mdi-camera" label="Foto Pegawai" id="file" ref="fileGambar"></v-file-input>
             <v-text-field type="date" v-model="form.tgl_lahir" label="Tanggal Lahir" required></v-text-field>
             <v-text-field v-model="form.alamat" label="Alamat" required></v-text-field>
             <v-text-field v-model="form.email" label="Email Pegawai" required></v-text-field>
@@ -59,15 +64,18 @@
     </v-dialog>
 
 
-    <v-dialog v-model="dialogFoto" persistent max-width="600px">
+    <v-dialog v-model="dialogFoto" persistent max-width="650px">
       <v-card>
         <v-card-title>
-          <span class="headline">Data Pegawai</span>
+          <span class="headline">Foto Pegawai</span>
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-text-field readonly v-model="form.nama_pegawai" label="Nama"></v-text-field>
-            <v-text-field readonly v-model="form.foto_pegawai" label="Foto"></v-text-field>
+            <v-flex align-center>
+                <v-img width="550px"
+                    :src="previewImageUrl == '' ? $baseUrl+'/storage/'+form.foto_pegawai : previewImageUrl"
+                    id="previewImage" class="mb-5"></v-img>
+            </v-flex>
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -110,6 +118,7 @@ export default {
       snackbar: false,
       error_message: '',
       color: '',
+      previewImageUrl: '',
       search: null,
       dialog: false,
       dialogFoto: false,
@@ -128,7 +137,7 @@ export default {
         { text: "Tanggal lahir", value: 'tgl_lahir'},
         { text: "Jenis Kelamin", value: 'jenis_kelamin'},
         { text: "Email", value: 'email'},
-        { text: "Status", value: 'is_aktif'},
+        { text: "Status Aktif", value: 'is_aktif'},
         { text: "Action", value:'actions'},
       ],
       pegawai: new FormData,
@@ -189,7 +198,9 @@ export default {
     save(){
       this.pegawai.append('nama_pegawai',this.form.nama_pegawai);
       this.pegawai.append('id_role',this.form.id_role);
-      this.pegawai.append('foto_pegawai',this.form.foto_pegawai);
+      var inputGambar = document.getElementById('file'),
+      dataFile = inputGambar.files[0];
+      this.pegawai.append('foto_pegawai',dataFile);
       this.pegawai.append('tgl_lahir',this.form.tgl_lahir);
       this.pegawai.append('jenis_kelamin', this.form.jenis_kelamin);
       this.pegawai.append('alamat',this.form.alamat);
@@ -219,21 +230,31 @@ export default {
       });
     },
 
+    onPreviewImage(e) {
+      this.previewImageUrl = URL.createObjectURL(e)
+    },
+
+
     update(){
-      let newData = {
-        nama_pegawai : this.form.nama_pegawai,
-        id_role: this.form.id_role,
-        foto_pegawai : this.form.foto_pegawai,
-        tgl_lahir : this.form.tgl_lahir,
-        jenis_kelamin: this.form.jenis_kelamin,
-        alamat : this.form.alamat,
-        email : this.form.email,
-        password : this.form.password,
-        is_aktif : this.form.is_aktif
-      };
+      var data = new FormData(),
+      inputGambar = document.getElementById('file'),
+      dataFile = inputGambar.files[0];
+
+        data.append('nama_pegawai', this.form.nama_pegawai);
+        data.append('id_role', this.form.id_role);
+        if(dataFile){
+          data.append('foto_pegawai', dataFile);
+        }
+        data.append('tgl_lahir', this.form.tgl_lahir);
+        data.append('jenis_kelamin', this.form.jenis_kelamin);
+        data.append('alamat', this.form.alamat);
+        data.append('email', this.form.email);
+        data.append('password' ,this.form.password);
+        data.append('is_aktif', this.form.is_aktif);
+      
       var url = this.$api + '/pegawai/' + this.editId;
       this.load = true;
-      this.$http.put(url, newData, {
+      this.$http.post(url, data, {
         headers: {
           'Authorization' : 'Bearer ' + localStorage.getItem('token')
         }
@@ -299,7 +320,6 @@ export default {
     showHandler(item){
       this.inputType = 'Ubah';
       this.editId = item.id_pegawai;
-      this.form.nama_pegawai = item.nama_pegawai;
       this.form.foto_pegawai = item.foto_pegawai
       this.dialogFoto = true;
     },

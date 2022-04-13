@@ -26,14 +26,19 @@
               <v-chip color="red">Tidak Tersedia</v-chip>
             </span>
           </template>
+           <template v-slot:[`item.kategori_aset`]="{ item }">
+            <span v-if="item.kategori_aset == 'Mitra' ">
+              <v-chip color="yellow">Mitra</v-chip>
+            </span>
+            <span v-if="item.kategori_aset == 'Perusahaan' ">
+              <v-chip color="blue">Perusahaan</v-chip>
+            </span>
+          </template>
         <template v-slot:[`item.actions`]="{item}">
                 <v-btn icon small class="mr-2" @click="editHandler(item)">
                   <v-icon color="red">mdi-pencil</v-icon>
                 </v-btn>
-                <!-- <v-btn icon small @click="deleteHandler(item.id_mobil)">
-                     <v-icon color="green">mdi-delete</v-icon>
-                </v-btn> -->
-                <v-btn icon small @click="showHandler(item.id_mobil)">
+                <v-btn icon small @click="showHandler(item)">
                      <v-icon color="black">mdi-view-list</v-icon>
                 </v-btn>
             </template>
@@ -54,10 +59,10 @@
             <v-text-field v-model="form.warna" label="Warna mobil" required></v-text-field>
             <v-text-field v-model="form.volume_bagasi" label="Volume Bagasi" required></v-text-field>
             <v-text-field v-model="form.fasilitas" label="Fasilitas" required></v-text-field>
-            <v-text-field v-model="form.kategori_aset" label="Kepemilikan" required></v-text-field>
+            <v-select :items="kepemilikan" v-model="form.kategori_aset" label="Kepemilikan" item-value="value" item-text="text" ></v-select>
             <v-select :items="statusKetersediaan" v-model="form.status_ketersediaan" label="Status Mobil" item-value="value" item-text="text" ></v-select>
             <v-text-field v-model="form.plat_nomor" label="Plat Nomor" required></v-text-field>
-            <v-text-field v-model="form.foto_mobil" label="Foto Mobil" required></v-text-field>
+            <v-file-input rounded filled prepend-icon="mdi-camera" label="Foto Mobil" id="file" ref="fileGambar"></v-file-input>
             <v-text-field v-model="form.tipe_mobil" label="Tipe Mobil" required></v-text-field>
             <v-text-field v-model="form.kapasitas" label="Kapasitas" required></v-text-field>
             <v-text-field v-model="form.biaya_sewa" label="Biaya sewa" required></v-text-field>
@@ -72,6 +77,29 @@
           <v-spacer></v-spacer>
           <v-btn color="red darken-1" text @click="cancel"> Close </v-btn>
           <v-btn color="blue darken-1" text @click="setForm"> Save </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+
+    <v-dialog v-model="dialogFoto" persistent max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Foto Mobil</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-text-field v-model="form.updated_at" label="Terakhir Update" required></v-text-field>
+            <v-flex align-center>
+                <v-img width="550px"
+                    :src="previewImageUrl == '' ? $baseUrl+'/storage/'+form.foto_mobil : previewImageUrl"
+                    id="previewImage" class="mb-5"></v-img>
+            </v-flex>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="black darken-1" text @click="cancel"> Close </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -109,9 +137,15 @@ export default {
       snackbar: false,
       error_message: '',
       color: '',
+      previewImageUrl: '',
       search: null,
       dialog: false,
+      dialogFoto: false,
       dialogConfirm: false,
+      kepemilikan: [
+        {text:"Mitra", value:"Mitra"},
+        {text:"Perusahaan", value:"Perusahaan"},
+      ],
       statusKetersediaan: [
         {text:"Tersedia", value:"tersedia"},
         {text:"Tidak Tersedia", value:"tidak tersedia"},
@@ -146,9 +180,11 @@ export default {
         last_service: null,
         awal_kontrak: null,
         akhir_kontrak: null,
+        updated_at: null,
         nomor_stnk: null,
       },
       deleteId: '',
+      showId: '',
       editId: ''
     };
   },
@@ -157,6 +193,9 @@ export default {
     setForm(){
       if(this.inputType !== 'Tambah'){
         this.update();
+      }
+      else if(this.inputType === 'Show'){
+        this.showData();
       }
       else{
         this.save();
@@ -175,7 +214,7 @@ export default {
     },
 
     readDataMitra(){
-      var url = this.$api + '/mitra';
+      var url = this.$api + '/mitrabystatus';
       this.$http.get(url, {
         headers: {
           'Authorization' : 'Bearer ' + localStorage.getItem('token')
@@ -193,7 +232,9 @@ export default {
       this.mobil.append('volume_bagasi',this.form.volume_bagasi);
       this.mobil.append('fasilitas',this.form.fasilitas);
       this.mobil.append('plat_nomor',this.form.plat_nomor);
-      this.mobil.append('foto_mobil',this.form.foto_mobil);
+      var inputGambar = document.getElementById('file'),
+      dataFile = inputGambar.files[0];
+      this.mobil.append('foto_mobil',dataFile);
       this.mobil.append('tipe_mobil',this.form.tipe_mobil);
       this.mobil.append('kapasitas',this.form.kapasitas);
       this.mobil.append('biaya_sewa',this.form.biaya_sewa);
@@ -224,30 +265,39 @@ export default {
       });
     },
 
+    onPreviewImage(e) {
+      this.previewImageUrl = URL.createObjectURL(e)
+    },
+
     update(){
-      let newData = {
-        nama_mobil : this.form.nama_mobil,
-        jenis_transmisi : this.form.jenis_transmisi,
-        bahan_bakar : this.form.bahan_bakar,
-        warna : this.form.warna,
-        volume_bagasi : this.form.volume_bagasi,
-        fasilitas : this.form.fasilitas,
-        kategori_aset : this.form.kategori_aset,
-        status_ketersediaan : this.form.status_ketersediaan,
-        plat_nomor : this.form.plat_nomor,
-        foto_mobil : this.form.foto_mobil,
-        tipe_mobil : this.form.tipe_mobil,
-        kapasitas : this.form.kapasitas,
-        biaya_sewa : this.form.biaya_sewa,
-        last_service : this.form.last_service,
-        awal_kontrak : this.form.awal_kontrak,
-        akhir_kontrak : this.form.akhir_kontrak,
-        nomor_stnk : this.form.nomor_stnk,
-        id_mitra : this.form.id_mitra,
-      };
+      var data = new FormData(),
+      inputGambar = document.getElementById('file'),
+      dataFile = inputGambar.files[0];
+
+        data.append('nama_mobil',this.form.nama_mobil);
+        data.append('jenis_transmisi', this.form.jenis_transmisi);
+        data.append('bahan_bakar', this.form.bahan_bakar);
+        data.append('warna',this.form.warna);
+        data.append('volume_bagasi' ,this.form.volume_bagasi);
+        data.append('fasilitas', this.form.fasilitas);
+        data.append('kategori_aset', this.form.kategori_aset);
+        data.append('status_ketersediaan', this.form.status_ketersediaan);
+        data.append('plat_nomor', this.form.plat_nomor);
+        if(dataFile){
+          data.append('foto_mobil', dataFile);
+        }
+        data.append('tipe_mobil', this.form.tipe_mobil);
+        data.append('kapasitas', this.form.kapasitas);
+        data.append('biaya_sewa', this.form.biaya_sewa);
+        data.append('last_service', this.form.last_service);
+        data.append('awal_kontrak', this.form.awal_kontrak);
+        data.append('akhir_kontrak', this.form.akhir_kontrak);
+        data.append('nomor_stnk', this.form.nomor_stnk);
+        data.append('id_mitra', this.form.id_mitra);
+      
       var url = this.$api + '/mobil/' + this.editId;
       this.load = true;
-      this.$http.put(url, newData, {
+      this.$http.post(url, data, {
         headers: {
           'Authorization' : 'Bearer ' + localStorage.getItem('token')
         }
@@ -319,8 +369,16 @@ export default {
       this.dialog = true;
     },
 
-    deleteHandler(id_pegawai) {
-      this.deleteId = id_pegawai;
+    showHandler(item){
+      this.inputType = 'Ubah';
+      this.editId = item.id_mobil;
+      this.form.updated_at = item.updated_at;
+      this.form.foto_mobil = item.foto_mobil;
+      this.dialogFoto = true;
+    },
+
+    deleteHandler(id_mobil) {
+      this.deleteId = id_mobil;
       this.dialogConfirm = true;
     },
     close() {
@@ -334,6 +392,7 @@ export default {
       this.readData();
       this.dialog = false;
       this.dialogConfirm = false;
+      this.dialogFoto = false;
       this.inputType = "Tambah";
     },
     resetForm() {

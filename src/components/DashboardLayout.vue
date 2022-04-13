@@ -1,14 +1,21 @@
 <template>
   <div class="dashboard">
-    <v-navigation-drawer v-model="drawer" class="fullheight, blue" width="256" app>
-      <v-list-item>
-        <v-list-item-content>
-          <v-img :src="require('@/assets/logo.png')" style="max-width:50px; float:left"/>
-          <div style="float:left">
-          <v-list-item-title class="title"> Atma Jaya Rental </v-list-item-title>
-          <v-list-item-subtitle class="subtitle"> Rentalan Terpercaya </v-list-item-subtitle>
-          </div>
-        </v-list-item-content>
+    <v-navigation-drawer v-model="drawer"  
+      :mini-variant.sync="mini"
+      permanent app color="blue">
+      <v-list-item class="px-2">
+        <v-list-item-avatar>
+          <v-img src="https://pbs.twimg.com/profile_images/378800000644330643/df168236cfdd359e0dc7ef7336538c8b_400x400.png"></v-img>
+        </v-list-item-avatar>
+
+        <v-list-item-title>Atma Jaya Rental</v-list-item-title>
+
+        <v-btn
+          icon
+          @click.stop="mini = !mini"
+        >
+          <v-icon>mdi-chevron-left</v-icon>
+        </v-btn>
       </v-list-item>
       
       <v-divider></v-divider>
@@ -62,6 +69,7 @@ export default {
         { icon : "mdi-account-group", title: "Customer", to:"/customer"},
         { icon : "mdi-currency-usd", title: "Transaksi", to:"/transaksi"},
       ],
+      mini: true,
     };
   },
   methods: {

@@ -18,7 +18,14 @@
 
       </v-card-title>
       <v-data-table :headers="headers" :items="promos" :search="search">
-
+        <template v-slot:[`item.status_promo`]="{ item }">
+            <span v-if="item.status_promo == 'aktif' ">
+              <v-chip color="green">Aktif</v-chip>
+            </span>
+            <span v-if="item.status_promo == 'non-aktif' ">
+              <v-chip color="red">Non Aktif</v-chip>
+            </span>
+          </template>
         <template v-slot:[`item.actions`]="{item}">
                 <v-btn icon small class="mr-2" @click="editHandler(item)">
                   <v-icon color="red">mdi-pencil</v-icon>

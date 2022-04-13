@@ -18,14 +18,14 @@
 
       </v-card-title>
       <v-data-table :headers="headers" :items="mitras" :search="search">
-
+        <template v-slot:[`item.is_aktif`]="{item}">
+          <span v-if="item.is_aktif == 1"><v-chip color="green">Aktif</v-chip> </span>
+          <span v-else><v-chip color="red">Tidak Aktif</v-chip> </span>
+        </template>
         <template v-slot:[`item.actions`]="{item}">
                 <v-btn icon small class="mr-2" @click="editHandler(item)">
                   <v-icon color="red">mdi-pencil</v-icon>
                 </v-btn>
-                <!-- <v-btn icon small @click="deleteHandler(item.id_mitra)">
-                     <v-icon color="green">mdi-delete</v-icon>
-                </v-btn> -->
             </template>
 
       </v-data-table>

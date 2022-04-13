@@ -18,6 +18,14 @@
 
       </v-card-title>
       <v-data-table :headers="headers" :items="customers" :search="search">
+         <template v-slot:[`item.status_berkas`]="{ item }">
+            <span v-if="item.status_berkas == 'verified' ">
+              <v-chip color="green">Verifikasi</v-chip>
+            </span>
+            <span v-if="item.status_berkas == 'not-verified' ">
+              <v-chip color="red">Belum Verifikasi</v-chip>
+            </span>
+          </template>
         <template v-slot:[`item.upload_berkas`]="{item}">
           <v-img :src="$baseUrl+'/storage/'+item.upload_berkas" height="100px" width="100px" style="object-fit:cover"/>  
         </template>
@@ -25,9 +33,10 @@
                 <v-btn icon small class="mr-2" @click="editHandler(item)">
                   <v-icon color="red">mdi-pencil</v-icon>
                 </v-btn>
+                <v-btn icon small @click="showHandler(item)">
+                     <v-icon color="black">mdi-view-list</v-icon>
+                </v-btn>
           </template>
-          
-
       </v-data-table>
     </v-card>
     
@@ -45,11 +54,6 @@
             <v-text-field v-model="form.email_customer" label="Email Customer" required></v-text-field>
             <v-text-field v-model="form.no_telp" label="Nomor Telepon" required></v-text-field>
             <v-file-input rounded filled prepend-icon="mdi-camera" label="Upload Berkas" id="file" ref="fileGambar"></v-file-input>
-            <v-flex align-center>
-                <v-img width="550px"
-                    :src="previewImageUrl == '' ? $baseUrl+'/storage/'+form.upload_berkas : previewImageUrl"
-                    id="previewImage" class="mb-5"></v-img>
-            </v-flex>
             <v-select :items="statusBerkas" v-model="form.status_berkas" label="Status Berkas" item-value="value" item-text="text" ></v-select>
             <v-text-field v-model="form.nomor_kartupengenal" label="Nomor KTP / KTM" required></v-text-field>
             <v-text-field v-model="form.no_sim" label="Nomor SIM" required></v-text-field>
@@ -83,6 +87,29 @@
       </v-card>
     </v-dialog>
 
+
+    <v-dialog v-model="dialogFoto" persistent max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Berkas Customer</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-flex align-center>
+                <v-img width="700px"
+                    :src="previewImageUrl == '' ? $baseUrl+'/storage/'+form.upload_berkas : previewImageUrl"
+                    id="previewImage" class="mb-5"></v-img>
+            </v-flex>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="black darken-1" text @click="cancel"> Close </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+
        <v-snackbar v-model="snackbar" :color="color" timeout="2000" bottom>{{ error_message }} </v-snackbar>
 
   </v-main>
@@ -102,6 +129,7 @@ export default {
       previewImageUrl: '',
       search: null,
       dialog: false,
+      dialogFoto: false,
       dialogConfirm: false,
       jenisKelamin: [
         { text: "Laki Laki", value: "laki-laki"},
@@ -114,12 +142,10 @@ export default {
       headers: [
         { text: "ID Customer", value:'id_customer'},
         { text: "Nama Customer", align: "start", sortable: true, value: "nama_customer"},
-        { text: "Alamat", value: 'alamat_customer'},
         { text: "Tanggal lahir", value: 'tgl_lahir'},
         { text: "Jenis Kelamin", value: 'jenis_kelamin'},
         { text: "Email", value: 'email_customer'},
-        { text: "Nomor Telepon", value: 'no_telp'},
-        { text: "Berkas", value: 'upload_berkas'},
+        { text: "Status Berkas", value: 'status_berkas'},
         { text: "Action", value:'actions'},
       ],
       customer: new FormData,
@@ -140,6 +166,7 @@ export default {
         usia_customer: null
       },
       deleteId: '',
+      showId: '',
       editId: ''
     };
   },
@@ -148,6 +175,9 @@ export default {
     setForm(){
       if(this.inputType !== 'Tambah'){
         this.update();
+      }
+      else if(this.inputType === 'Show'){
+        this.showData();
       }
       else{
         this.save();
@@ -298,6 +328,13 @@ export default {
       this.dialog = true;
     },
 
+    showHandler(item){
+      this.inputType = 'Ubah';
+      this.editId = item.id_customer,
+      this.form.upload_berkas = item.upload_berkas
+      this.dialogFoto = true;
+    },
+
     deleteHandler(id_customer) {
       this.deleteId = id_customer;
       this.dialogConfirm = true;
@@ -313,6 +350,7 @@ export default {
       this.readData();
       this.dialog = false;
       this.dialogConfirm = false;
+      this.dialogFoto = false;
       this.inputType = "Tambah";
     },
     resetForm() {
