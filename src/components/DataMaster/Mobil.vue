@@ -27,10 +27,10 @@
             </span>
           </template>
            <template v-slot:[`item.kategori_aset`]="{ item }">
-            <span v-if="item.kategori_aset == 'Mitra' ">
+            <span v-if="item.kategori_aset == 'mitra' ">
               <v-chip color="yellow">Mitra</v-chip>
             </span>
-            <span v-if="item.kategori_aset == 'Perusahaan' ">
+            <span v-if="item.kategori_aset == 'perusahaan' ">
               <v-chip color="blue">Perusahaan</v-chip>
             </span>
           </template>
@@ -70,7 +70,7 @@
             <v-text-field type="date" v-model="form.awal_kontrak" label="Tanggal awal kontrak" required></v-text-field>
             <v-text-field type="date" v-model="form.akhir_kontrak" label="Tanggal akhir kontrak" required></v-text-field>
             <v-text-field v-model="form.nomor_stnk" label="Nomor STNK" required></v-text-field>
-            <v-select :items="mitras" v-model="form.id_mitra" label="Nama Mitra" item-value="id_mitra" item-text="nama_mitra" ></v-select>
+            <v-select :items="mitras" clearable v-model="form.id_mitra" label="Nama Mitra" item-value="id_mitra" item-text="nama_mitra" ></v-select>
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -143,8 +143,8 @@ export default {
       dialogFoto: false,
       dialogConfirm: false,
       kepemilikan: [
-        {text:"Mitra", value:"Mitra"},
-        {text:"Perusahaan", value:"Perusahaan"},
+        {text:"Mitra", value:"mitra"},
+        {text:"Perusahaan", value:"perusahaan"},
       ],
       statusKetersediaan: [
         {text:"Tersedia", value:"tersedia"},
@@ -163,7 +163,7 @@ export default {
       mobils: [],
       mitras: [],
       form:{
-        id_mitra: null,
+        id_mitra: [],
         nama_mobil: null,
         jenis_transmisi: null,
         bahan_bakar: null,
@@ -225,6 +225,13 @@ export default {
     },
 
     save(){
+      if(this.form.id_mitra > 0)
+      {
+        this.mobil.append('id_mitra',this.form.id_mitra);
+      }
+      else{
+        this.mobil.append('id_mitra',[]);
+      }
       this.mobil.append('nama_mobil',this.form.nama_mobil);
       this.mobil.append('jenis_transmisi',this.form.jenis_transmisi);
       this.mobil.append('bahan_bakar',this.form.bahan_bakar);
@@ -273,7 +280,13 @@ export default {
       var data = new FormData(),
       inputGambar = document.getElementById('file'),
       dataFile = inputGambar.files[0];
-
+        if(this.form.id_mitra > 0)
+        {
+          data.append('id_mitra',this.form.id_mitra);
+        }
+        else{
+          data.append('id_mitra',[]);
+        }
         data.append('nama_mobil',this.form.nama_mobil);
         data.append('jenis_transmisi', this.form.jenis_transmisi);
         data.append('bahan_bakar', this.form.bahan_bakar);
@@ -293,7 +306,6 @@ export default {
         data.append('awal_kontrak', this.form.awal_kontrak);
         data.append('akhir_kontrak', this.form.akhir_kontrak);
         data.append('nomor_stnk', this.form.nomor_stnk);
-        data.append('id_mitra', this.form.id_mitra);
       
       var url = this.$api + '/mobil/' + this.editId;
       this.load = true;

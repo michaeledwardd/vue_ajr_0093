@@ -18,18 +18,55 @@
 
       </v-card-title>
       <v-data-table :headers="headers" :items="transaksis" :search="search">
+        <template v-slot:[`item.status_transaksi`]="{ item }">
+            <span v-if="item.status_transaksi == 'selesai' ">
+              <v-chip color="green">Selesai</v-chip>
+            </span>
+            <span v-if="item.status_transaksi == 'belum verifikasi' ">
+              <v-chip color="yellow">Belum Verifikasi</v-chip>
+            </span>
+            <span v-if="item.status_transaksi == 'gagal transaksi' ">
+              <v-chip color="orange">Gagal Transaksi</v-chip>
+            </span>
+            <span v-if="item.status_transaksi == 'gagal pembayaran' ">
+              <v-chip color="red">Gagal Pembayaran</v-chip>
+            </span>
+            <span v-if="item.status_transaksi == 'sedang berjalan' ">
+              <v-chip color="blue">Sedang Berjalan</v-chip>
+            </span>
+        </template>
+
+        <template v-slot:[`item.jenis_peminjaman`]="{ item }">
+            <span v-if="item.jenis_peminjaman == 'mobil' ">
+              <v-chip color="blue">Mobil</v-chip>
+            </span>
+            <span v-if="item.jenis_peminjaman == 'mobil + driver' ">
+              <v-chip color="yellow">Mobil + Driver</v-chip>
+            </span>
+        </template>
+
+        <template v-slot:[`item.metode_bayar`]="{ item }">
+            <span v-if="item.metode_bayar == 'cash' ">
+              <v-chip color="green">Cash</v-chip>
+            </span>
+            <span v-if="item.metode_bayar == 'transfer' ">
+              <v-chip color="yellow">Transfer</v-chip>
+            </span>
+        </template>
 
         <template v-slot:[`item.actions`]="{item}">
                 <v-btn icon small class="mr-2" @click="editHandler(item)">
                   <v-icon color="red">mdi-pencil</v-icon>
                 </v-btn>
-                <!-- <v-btn icon small @click="deleteHandler(item.id_transaksi)">
-                     <v-icon color="green">mdi-delete</v-icon>
-                </v-btn> -->
+                <v-btn icon small @click="showHandler(item)">
+                     <v-icon color="black">mdi-view-list</v-icon>
+                </v-btn>
             </template>
 
       </v-data-table>
     </v-card>
+    
+    
     
     <v-dialog v-model="dialog" persistent max-width="600px">
       <v-card>
@@ -38,12 +75,47 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-text-field v-model="form.nama_transaksi" label="Nama transaksi" required></v-text-field>
-            <v-text-field v-model="form.alamat" label="Alamat transaksi" required></v-text-field>
-            <v-text-field v-model="form.nomor_ktp" label="Nomor KTP" required></v-text-field>
-            <v-text-field v-model="form.nomor_telepon" label="Nomor Telepon" required></v-text-field>
-             <v-select :items="statusAktif" v-model="form.is_aktif" label="Status transaksi" item-value="value" item-text="text" ></v-select>
-            
+            <v-select :items="customers" v-model="form.id_customer" label="Nama Customer" item-value="id_customer" item-text="nama_customer" ></v-select>
+            <v-select :items="driveraktif" clearable v-model="form.id_driver" label="Nama Driver" item-value="id_driver" item-text="nama_driver" ></v-select>
+            <v-select :items="promoaktif" clearable v-model="form.id_promo" label="Jenis Promo" item-value="id_promo" item-text="jenis_promo" ></v-select>
+            <v-select :items="pegawaiaktif" v-model="form.id_pegawai" label="Nama Pegawai" item-value="id_pegawai" item-text="nama_pegawai" ></v-select>
+            <v-select :items="mobils" v-model="form.id_mobil" label="Nama Mobil" item-value="id_mobil" item-text="nama_mobil" ></v-select>
+            <v-select :items="jenisPeminjaman" v-model="form.jenis_peminjaman" label="Jenis Peminjaman" item-value="value" item-text="text" ></v-select>
+            <v-text-field type="date" v-model="form.tgl_transaksi" label="Tanggal Transaksi" required></v-text-field>
+            <v-text-field type="date" v-model="form.tgl_pinjam" label="Tanggal Peminjaman" required></v-text-field>
+            <v-text-field type="date" v-model="form.tgl_kembali" label="Tanggal Pengembalian" required></v-text-field>
+            <v-text-field type="time" v-model="form.waktu_kembali" label="Waktu Pengembalian" required></v-text-field>
+            <v-text-field type="date" v-model="form.tgl_selesai_pinjam" label="Tanggal Mobil Kembali" required></v-text-field>
+            <v-text-field type="time" v-model="form.waktu_selesai_pinjam" label="Waktu Mobil Kembali" required></v-text-field>
+            <v-file-input rounded filled prepend-icon="mdi-camera" label="Bukti Bayar" id="buktiBayar" ref="fileBuktiBayar"></v-file-input>
+            <v-flex align-center>
+                <v-img width="550px"
+                    :src="previewImageUrl == '' ? $baseUrl+'/storage/'+form.bukti_bayar : previewImageUrl"
+                    id="previewImage" class="mb-5"></v-img>
+            </v-flex>
+            <v-select :items="statusTransaksi" v-model="form.status_transaksi" label="Status Transaksi" item-value="value" item-text="text" ></v-select>
+            <v-select :items="metodeBayar" v-model="form.metode_bayar" label="Metode Pembayaran" item-value="value" item-text="text" ></v-select>
+            <v-select :items="ratingperform" clearable v-model="form.rating_perform_driver" label="Rating Driver" item-value="value" item-text="text" ></v-select>
+            <v-select :items="ratingperform" v-model="form.rating_perform_ajr" label="Rating AJR" item-value="value" item-text="text" ></v-select>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-1" text @click="cancel"> Cancel </v-btn>
+          <v-btn color="blue darken-1" text @click="setForm"> Save </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="dialogConfirm" persistent max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Rating Driver dan AJR</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-select :items="ratingperform" v-model="form.rating_perform_driver" label="Rating Driver" item-value="value" item-text="text" ></v-select>
+            <v-select :items="ratingperform" v-model="form.rating_perform_ajr" label="Rating AJR" item-value="value" item-text="text" ></v-select>
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -60,7 +132,7 @@
         <v-card-title>
           <span class="headline">warning!</span>
         </v-card-title>
-        <v-card-text> Anda yakin ingin menghapus transaksi ini? </v-card-text>
+        <v-card-text> Anda yakin dengan pemberian rating ini? </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="dialogConfirm = false">
@@ -87,12 +159,31 @@ export default {
       snackbar: false,
       error_message: '',
       color: '',
+      previewImageUrl: '',
       search: null,
       dialog: false,
       dialogConfirm: false,
-      statusAktif:[
-        { text: "Aktif", value: 1},
-        { text: "Tidak Aktif", value: 0},
+      metodeBayar:[
+        {text: "Transfer", value: 'transfer'},
+        {text: "Cash", value: 'cash'},
+      ],
+      jenisPeminjaman:[
+        {text: "Mobil+driver", value: 'mobil + driver'},
+        {text: "Mobil", value: 'mobil'},
+      ],
+      ratingperform: [
+        {text: 1, value: 1},
+        {text: 2, value: 2},
+        {text: 3, value: 3},
+        {text: 4, value: 4},
+        {text: 5, value: 5}
+      ],
+      statusTransaksi:[
+        { text: "Selesai", value: 'selesai'},
+        { text: "Belum Verifikasi", value: 'belum verifikasi'},
+        { text: "Gagal Transaksi", value: 'gagal transaksi'},
+        { text: "Sedang Berjalan", value: 'sedang berjalan'},
+        { text: "Gagal Pembayaran", value: 'gagal pembayaran'},
       ],
       headers: [
         { text: "ID Transaksi", align: "start", sortable: true, value: "id_transaksi"},
@@ -101,23 +192,42 @@ export default {
         { text: "Nama Pegawai", value: 'nama_pegawai'},
         { text: "Nama Mobil", value: 'nama_mobil'},
         { text: "Jenis Promo", value: 'jenis_promo'},
-        { text: "Jumlah Potongan", value:'jumlah_potongan'},
+        { text: "Metode Bayar", value: 'metode_bayar'},
+        { text: "Jenis Peminjaman", value: 'jenis_peminjaman'},
+        { text: "Status Transaksi", value:'status_transaksi'},
         { text: "Action", value:'actions'},
       ],
       transaksi: new FormData,
       transaksis: [],
       mobils:[],
+      mobiltersedia:[],
       customers: [],
       driver:[],
+      driveraktif:[],
       promos:[],
+      promoaktif:[],
       pegawais:[],
+      pegawaiaktif:[],
+      reratarating: [],
       form:{
         id_transaksi: null,
-        id_promo: null,
-        id_driver: null,
+        id_promo: [],
+        id_driver: [],
         id_pegawai: null,
         id_mobil: null,
         id_customer: null,
+        tgl_transaksi: null,
+        tgl_pinjam: null,
+        tgl_kembali: null,
+        waktu_kembali: null,
+        tgl_selesai_pinjam: null,
+        waktu_selesai_pinjam: null,
+        bukti_bayar: null,
+        jenis_peminjaman: null,
+        metode_bayar: null,
+        status_transaksi: null,
+        rating_perform_ajr: null,
+        rating_perform_driver: [],
       },
       deleteId: '',
       editId: ''
@@ -128,6 +238,10 @@ export default {
     setForm(){
       if(this.inputType !== 'Tambah'){
         this.update();
+      }
+      else if(this.inputType === 'TambahRating')
+      {
+        this.tambahrating();
       }
       else{
         this.save();
@@ -156,6 +270,17 @@ export default {
       })
     },
 
+    readDataPromoAktif(){
+      var url = this.$api + '/promobystatus';
+      this.$http.get(url, {
+        headers: {
+          'Authorization' : 'Bearer ' + localStorage.getItem('token')
+        }
+      }).then(response => {
+        this.promoaktif = response.data.data;
+      })
+    },
+
     readDataDriver(){
       var url = this.$api + '/driver';
       this.$http.get(url, {
@@ -167,6 +292,17 @@ export default {
       })
     },
 
+    readDataDriverAktif(){
+      var url = this.$api + '/driverstatusaktif';
+      this.$http.get(url, {
+        headers: {
+          'Authorization' : 'Bearer ' + localStorage.getItem('token')
+        }
+      }).then(response => {
+        this.driveraktif = response.data.data;
+      })
+    },
+
     readDataPegawai(){
       var url = this.$api + '/pegawai';
       this.$http.get(url, {
@@ -175,6 +311,17 @@ export default {
         }
       }).then(response => {
         this.pegawais = response.data.data;
+      })
+    },
+
+    readDataPegawaiAktif(){
+      var url = this.$api + '/pegawaibystatus';
+      this.$http.get(url, {
+        headers: {
+          'Authorization' : 'Bearer ' + localStorage.getItem('token')
+        }
+      }).then(response => {
+        this.pegawaiaktif = response.data.data;
       })
     },
 
@@ -201,11 +348,46 @@ export default {
     },
 
     save(){
-      this.transaksi.append('nama_transaksi',this.form.nama_transaksi);
-      this.transaksi.append('alamat',this.form.alamat);
-      this.transaksi.append('nomor_ktp',this.form.nomor_ktp);
-      this.transaksi.append('nomor_telepon', this.form.nomor_telepon);
-      this.transaksi.append('is_aktif',this.form.is_aktif)
+      if(this.form.id_promo > 0)
+      {
+        this.transaksi.append('id_promo',this.form.id_promo);
+      }
+      else{
+        this.transaksi.append('id_promo',[]);
+      }
+  
+      if(this.form.id_driver !== null)
+      {
+        this.transaksi.append('id_driver',this.form.id_driver);
+      }
+      else{
+        this.transaksi.append('id_driver', []);
+      }
+      
+      this.transaksi.append('id_pegawai',this.form.id_pegawai);
+      this.transaksi.append('id_mobil', this.form.id_mobil);
+      this.transaksi.append('id_customer',this.form.id_customer);
+      this.transaksi.append('jenis_peminjaman',this.form.jenis_peminjaman);
+      this.transaksi.append('tgl_transaksi',this.form.tgl_transaksi);
+      this.transaksi.append('tgl_pinjam',this.form.tgl_pinjam);
+      this.transaksi.append('tgl_kembali',this.form.tgl_kembali);
+      this.transaksi.append('waktu_kembali',this.form.waktu_kembali);
+      this.transaksi.append('tgl_selesai_pinjam',this.form.tgl_selesai_pinjam);
+      this.transaksi.append('waktu_selesai_pinjam',this.form.waktu_selesai_pinjam);
+      var inputGambar = document.getElementById('buktiBayar'),
+      dataFile = inputGambar.files[0];
+      this.transaksi.append('bukti_bayar',dataFile);
+      this.transaksi.append('metode_bayar',this.form.metode_bayar);
+      this.transaksi.append('status_transaksi',this.form.status_transaksi);
+      this.transaksi.append('rating_perform_ajr',this.form.rating_perform_ajr);
+      if(this.form.rating_perform_driver > 0)
+      {
+        this.transaksi.append('rating_perform_driver',this.form.rating_perform_driver);
+      }
+      else{
+        this.transaksi.append('rating_perform_driver',[]);
+      }
+     
 
       var url= this.$api + '/transaksi/'
       this.load = true;
@@ -229,17 +411,57 @@ export default {
       });
     },
 
+    onPreviewImage(e) {
+      this.previewImageUrl = URL.createObjectURL(e)
+    },
+
     update(){
-      let newData = {
-        nama_transaksi : this.form.nama_transaksi,
-        alamat : this.form.alamat,
-        nomor_ktp : this.form.nomor_ktp,
-        nomor_telepon: this.form.nomor_telepon,
-        is_aktif: this.form.is_aktif
-      };
+      var data = new FormData(),
+      inputGambar = document.getElementById('buktiBayar'),
+      dataFile = inputGambar.files[0];
+
+        if(this.form.id_promo > 0)
+        {
+          data.append('id_promo',this.form.id_promo);
+        }
+        else{
+          data.append('id_promo',[]);
+        }
+
+        if(this.form.id_driver !== null)
+        {
+          data.append('id_driver',this.form.id_driver);
+        }
+        else{
+          data.append('id_driver',[]);
+        }
+        data.append('id_pegawai', this.form.id_pegawai);
+        data.append('id_mobil', this.form.id_mobil);
+        data.append('id_customer', this.form.id_customer);
+        data.append('jenis_peminjaman',this.form.jenis_peminjaman)
+        data.append('tgl_transaksi', this.form.tgl_transaksi);
+        data.append('tgl_pinjam', this.form.tgl_pinjam);
+        data.append('tgl_kembali', this.form.tgl_kembali);
+        data.append('waktu_kembali',this.form.waktu_kembali);
+        data.append('tgl_selesai_pinjam', this.form.tgl_selesai_pinjam);
+        data.append('waktu_selesai_pinjam',this.form.waktu_selesai_pinjam);
+        if(dataFile){
+          data.append('bukti_bayar', dataFile);
+        }
+        data.append('metode_bayar', this.form.metode_bayar);
+        data.append('status_transaksi', this.form.status_transaksi);
+        data.append('rating_perform_ajr', this.form.rating_perform_ajr);
+        if(this.form.rating_perform_driver > 0)
+        {
+          data.append('rating_perform_driver',this.form.rating_perform_driver);
+        }
+        else{
+          data.append('rating_perform_driver',[]);
+        }
+          
       var url = this.$api + '/transaksi/' + this.editId;
       this.load = true;
-      this.$http.put(url, newData, {
+      this.$http.post(url, data, {
         headers: {
           'Authorization' : 'Bearer ' + localStorage.getItem('token')
         }
@@ -260,41 +482,26 @@ export default {
       });
     },
 
-    deleteData() {
-      //mengahapus data
-      var url = this.$api + '/transaksi/' + this.deleteId;
-      //data dihapus berdasarkan id
-      this.$http.delete(url, {
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
-          },
-        })
-        .then((response) => {
-          this.error_message = response.data.message;
-          this.color = "green";
-          this.snackbar = true;
-          this.load = false;
-          this.close();
-          this.readData(); //mengambil data
-          this.resetForm();
-          this.inputType = "Tambah";
-        })
-        .catch((error) => {
-          this.error_message = error.response.data.message;
-          this.color = "red";
-          this.snackbar = true;
-          this.load = false;
-        });
-    },
-
     editHandler(item){
       this.inputType = 'Ubah';
       this.editId = item.id_transaksi;
-      this.form.nama_transaksi = item.nama_transaksi;
-      this.form.alamat = item.alamat;
-      this.form.nomor_ktp = item.nomor_ktp;
-      this.form.nomor_telepon = item.nomor_telepon;
-      this.form.is_aktif = item.is_aktif;
+      this.form.id_promo = item.id_promo;
+      this.form.id_driver = item.id_driver;
+      this.form.id_pegawai = item.id_pegawai;
+      this.form.id_mobil = item.id_mobil;
+      this.form.id_customer = item.id_customer;
+      this.form.tgl_transaksi = item.tgl_transaksi;
+      this.form.jenis_peminjaman = item.jenis_peminjaman;
+      this.form.tgl_pinjam = item.tgl_pinjam;
+      this.form.tgl_kembali = item.tgl_kembali;
+      this.form.waktu_kembali = item.waktu_kembali;
+      this.form.tgl_selesai_pinjam = item.tgl_selesai_pinjam;
+      this.form.waktu_selesai_pinjam = item.waktu_selesai_pinjam;
+      this.form.bukti_bayar = item.bukti_bayar;
+      this.form.metode_bayar = item.metode_bayar;
+      this.form.status_transaksi = item.status_transaksi;
+      this.form.rating_perform_ajr = item.rating_perform_ajr;
+      this.form.rating_perform_driver = item.rating_perform_driver;
       this.dialog = true;
     },
 
@@ -318,11 +525,23 @@ export default {
     resetForm() {
       this.form = {
         id_transaksi: null,
-        id_promo: null,
-        id_driver: null,
+        id_promo: [],
+        id_driver: [],
         id_pegawai: null,
         id_mobil: null,
         id_customer: null,
+        tgl_transaksi: null,
+        tgl_pinjam: null,
+        tgl_kembali: null,
+        waktu_kembali: null,
+        tgl_selesai_pinjam: null,
+        waktu_selesai_pinjam: null,
+        bukti_bayar: null,
+        jenis_peminjaman: null,
+        metode_bayar: null,
+        status_transaksi: null,
+        rating_perform_ajr: null,
+        rating_perform_driver: null,
       };
     },
   },
@@ -333,8 +552,11 @@ export default {
   },
   mounted() {
     this.readDataPromo();
+    this.readDataPromoAktif();
     this.readDataDriver();
+    this.readDataDriverAktif();
     this.readDataPegawai();
+    this.readDataPegawaiAktif();
     this.readDataMobil();
     this.readDataCustomer();
     this.readData();

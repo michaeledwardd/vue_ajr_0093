@@ -18,6 +18,12 @@
 
       </v-card-title>
       <v-data-table :headers="headers" :items="drivers" :search="search">
+         <template v-slot:[`item.rerata_rating`]="{item}">
+          <div v-for="rating in ratings" :key="rating.id_driver">
+            <p v-if="item.id_driver === rating.id_driver">{{rating.reratabaru}}</p>
+          </div>
+        </template>
+
          <template v-slot:[`item.foto_driver`]="{item}">
           <v-img :src="$baseUrl+'/storage/'+item.foto_driver" height="100px" width="100px" style="object-fit:cover"/>  
         </template>
@@ -46,6 +52,14 @@
           <span v-if="item.is_aktif == 1"><v-chip color="green">Aktif</v-chip> </span>
           <span v-else><v-chip color="red">Tidak Aktif</v-chip> </span>
         </template>
+         <template v-slot:[`item.status_berkas`]="{ item }">
+            <span v-if="item.status_berkas == 'belum verifikasi' ">
+              <v-chip color="red">Not Verified</v-chip>
+            </span>
+            <span v-if="item.status_berkas == 'verifikasi' ">
+              <v-chip color="green">Verified</v-chip>
+            </span>
+          </template>
          <template v-slot:[`item.status_tersedia`]="{ item }">
             <span v-if="item.status_tersedia == 'tersedia' ">
               <v-chip color="yellow">Tersedia</v-chip>
@@ -116,31 +130,37 @@
         </v-card-title>
         <v-card-text>
           <v-container>
+            <v-label>Foto Driver</v-label>
             <v-flex align-center>
                 <v-img width="550px"
                     :src="previewImageUrl == '' ? $baseUrl+'/storage/'+form.foto_driver : previewImageUrl"
                     id="previewImage" class="mb-5"></v-img>
             </v-flex>
+            <v-label>Foto SIM Driver</v-label>
             <v-flex align-center>
                 <v-img width="550px"
                     :src="previewImageUrl == '' ? $baseUrl+'/storage/'+form.upload_sim : previewImageUrl"
                     id="previewImage" class="mb-5"></v-img>
             </v-flex>
+            <v-label>Foto Surat Bebas Napza</v-label>
             <v-flex align-center>
                 <v-img width="550px"
                     :src="previewImageUrl == '' ? $baseUrl+'/storage/'+form.upload_bebas_napza : previewImageUrl"
                     id="previewImage" class="mb-5"></v-img>
             </v-flex>
+            <v-label>Foto Surat Sehat Jiwa</v-label>
             <v-flex align-center>
                 <v-img width="550px"
                     :src="previewImageUrl == '' ? $baseUrl+'/storage/'+form.upload_sehat_jiwa : previewImageUrl"
                     id="previewImage" class="mb-5"></v-img>
             </v-flex>
+            <v-label>Foto Surat Sehat Jasmani</v-label>
             <v-flex align-center>
                 <v-img width="550px"
                     :src="previewImageUrl == '' ? $baseUrl+'/storage/'+form.upload_sehat_jasmani : previewImageUrl"
                     id="previewImage" class="mb-5"></v-img>
             </v-flex>
+            <v-label>Foto SKCK</v-label>
             <v-flex align-center>
                 <v-img width="550px"
                     :src="previewImageUrl == '' ? $baseUrl+'/storage/'+form.upload_skck : previewImageUrl"
@@ -194,7 +214,7 @@ export default {
       dialogData: false,
       dialogConfirm: false,
       jenisKelamin: [
-        { text: "Laki Laki", value: "laki-laki"},
+        { text: "Laki Laki", value: "laki laki"},
         { text: "Perempuan", value: "perempuan"},
       ],
       statusTersedia:[
@@ -218,21 +238,16 @@ export default {
         { text: "Nama Driver", align: "start", sortable: true, value: "nama_driver"},
         { text: "Jenis Kelamin", value: "jenis_kelamin"},
         { text: "Tanggal Lahir", value: "tgl_lahir"},
+        { text: "Nomor Telepon", value: "no_telp"},
+        { text: "Rerata rating", value: "rerata_rating"},
         { text: "Tersedia", value: "status_tersedia"},
         { text: "Aktif", value: 'is_aktif'},
-        { text: "Nomor Telepon", value: "no_telp"},
         { text: "Status Berkas", value: "status_berkas"},
-        { text: "Rerata rating", value: "rerata_rating"},
-        { text: "Foto Driver", value: "foto_driver"},
-        { text: "SIM", value: "upload_sim"},
-        { text: "Bebas Napza", value: "upload_bebas_napza"},
-        { text: "Sehat Jiwa", value: "upload_sehat_jiwa"},
-        { text: "Sehat Jasmani", value: "upload_sehat_jasmani"},
-        { text: "SKCK", value: "upload_skck"},
         { text: "Action", value:'actions'},
       ],
       driver: new FormData,
       drivers: [],
+      ratings: [],
       form:{
         nama_driver: null,
         jenis_kelamin: null,
@@ -277,6 +292,17 @@ export default {
         }
       }).then(response => {
         this.drivers = response.data.data;
+      })
+    },
+
+    readDataRating(){
+      var url = this.$api + '/hitungrerata';
+      this.$http.get(url, {
+        headers: {
+          'Authorization' : 'Bearer ' + localStorage.getItem('token')
+        }
+      }).then(response => {
+        this.ratings = response.data.data;
       })
     },
 
@@ -528,6 +554,7 @@ export default {
   },
   mounted() {
     this.readData();
+    this.readDataRating();
   },
 };
 </script>
