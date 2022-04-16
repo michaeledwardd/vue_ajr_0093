@@ -58,9 +58,6 @@
                 <v-btn icon small class="mr-2" @click="editHandler(item)">
                   <v-icon color="red">mdi-pencil</v-icon>
                 </v-btn>
-                <v-btn icon small @click="showHandler(item)">
-                     <v-icon color="black">mdi-view-list</v-icon>
-                </v-btn>
             </template>
 
       </v-data-table>
@@ -107,7 +104,7 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="dialogConfirm" persistent max-width="600px">
+    <v-dialog v-model="dialogRating" persistent max-width="600px">
       <v-card>
         <v-card-title>
           <span class="headline">Rating Driver dan AJR</span>
@@ -163,6 +160,7 @@ export default {
       search: null,
       dialog: false,
       dialogConfirm: false,
+      dialogRating: false,
       metodeBayar:[
         {text: "Transfer", value: 'transfer'},
         {text: "Cash", value: 'cash'},
@@ -513,6 +511,7 @@ export default {
       this.dialog = false;
       this.inputType = "Tambah";
       this.dialogConfirm = false;
+      this.dialogRating = false,
       this.readData();
     },
     cancel() {

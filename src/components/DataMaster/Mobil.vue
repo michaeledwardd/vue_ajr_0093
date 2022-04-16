@@ -63,7 +63,7 @@
             <v-select :items="statusKetersediaan" v-model="form.status_ketersediaan" label="Status Mobil" item-value="value" item-text="text" ></v-select>
             <v-text-field v-model="form.plat_nomor" label="Plat Nomor" required></v-text-field>
             <v-file-input rounded filled prepend-icon="mdi-camera" label="Foto Mobil" id="file" ref="fileGambar"></v-file-input>
-            <v-text-field v-model="form.tipe_mobil" label="Tipe Mobil" required></v-text-field>
+             <v-select :items="tipeMobil" v-model="form.tipe_mobil" label="Tipe Mobil" item-value="value" item-text="text" ></v-select>
             <v-text-field v-model="form.kapasitas" label="Kapasitas" required></v-text-field>
             <v-text-field v-model="form.biaya_sewa" label="Biaya sewa" required></v-text-field>
             <v-text-field type="date" v-model="form.last_service" label="Tanggal terakhir service" required></v-text-field>
@@ -142,6 +142,12 @@ export default {
       dialog: false,
       dialogFoto: false,
       dialogConfirm: false,
+      tipeMobil: [
+        { text: "City car", value: 'city car'},
+        { text: "Sedan", value: 'sedan'},
+        { text: "MPV", value: 'MPV'},
+        { text: "SUV", value: 'SUV'},
+      ],
       kepemilikan: [
         {text:"Mitra", value:"mitra"},
         {text:"Perusahaan", value:"perusahaan"},

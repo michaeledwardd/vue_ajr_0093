@@ -5,7 +5,7 @@
       permanent app color="blue">
       <v-list-item class="px-2">
         <v-list-item-avatar>
-          <v-img src="https://pbs.twimg.com/profile_images/378800000644330643/df168236cfdd359e0dc7ef7336538c8b_400x400.png"></v-img>
+          <v-img src="https://www.rentalmobilagape.com/wp-content/uploads/2014/01/logo-rental-mobil-agape.jpg"></v-img>
         </v-list-item-avatar>
 
         <v-list-item-title>Atma Jaya Rental</v-list-item-title>
@@ -35,7 +35,7 @@
 
     </v-navigation-drawer>
     <v-app-bar app fixed height="75px">
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon> -->
       <VSpacer />
       <v-toolbar-items>
          <v-btn text router @click = "btnLogout"><v-icon>mdi-account</v-icon></v-btn>
