@@ -91,6 +91,13 @@ const router = new VueRouter({
                     meta: {title : 'Jadwal'},
                     component: importComponent('DataMaster/Jadwal'),
                 },
+                //mitra
+                {
+                    path: '/aset',
+                    name: 'Aset',
+                    meta: {title : 'Aset'},
+                    component: importComponent('DataMaster/Aset'),
+                },
             ],
         },
 
@@ -115,15 +122,32 @@ const router = new VueRouter({
     ]
 });
 
-//Set Judul
-// router.beforeEach((to, from, next) => {
-//     if(to.name != "Login" && localStorage.getItem("token") == null && to.name!="Register"){
-//         next('login')
-//         document.to.meta.title = "Login"
-        
-//     }
-//     document.title = to.meta.title;
-//     next();
-// });
+router.beforeEach((to, from, next) => {
+    if(to.name == "Dashboard" && localStorage.getItem("token") == null ||
+    to.name == "Aset" && localStorage.getItem("token") == null ||
+    to.name == "Customer" && localStorage.getItem("token") == null ||
+    to.name == "DetailShift" && localStorage.getItem("token") == null ||
+    to.name == "Driver" && localStorage.getItem("token") == null ||
+    to.name == "Jadwal" && localStorage.getItem("token") == null ||
+    to.name == "Mitra" && localStorage.getItem("token") == null ||
+    to.name == "Mobil" && localStorage.getItem("token") == null ||
+    to.name == "Pegawai" && localStorage.getItem("token") == null ||
+    to.name == "Promo" && localStorage.getItem("token") == null ||
+    to.name == "Role" && localStorage.getItem("token") == null ||
+    to.name == "Transaksi" && localStorage.getItem("token") == null){
+        next('login')
+        document.to.meta.title = "Login"
+    }
+
+    if(to.name == "DetailShift" && localStorage.getItem("nama_role") != 'Manager' && localStorage.getItem("token") == null ||
+    to.name == "Jadwal" && localStorage.getItem("nama_role") != 'Manager' && localStorage.getItem("token") == null ||
+    to.name == "Promo" && localStorage.getItem("nama_role") != 'Manager' && localStorage.getItem("token") == null){
+        next('dashboard')
+        document.to.meta.title = "Dashboard"
+    }
+    
+    document.title = to.meta.title;
+    next();
+});
 
 export default router;

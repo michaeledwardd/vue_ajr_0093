@@ -181,8 +181,8 @@ export default {
       headers: [
         { text: "Nama Mobil", align: "start", sortable: true, value: "nama_mobil"},
         { text: "Biaya Sewa", value: "biaya_sewa"},
-        { text: "Kapasitas", value: "kapasitas"},
-        { text: "Fasilitas", value: "fasilitas"},
+        { text: "Kategori Mobil", value: "tipe_mobil"},
+        { text: "Plat Nomor", value: "plat_nomor"},
         { text: "Kategori Aset", value: "kategori_aset"},
         { text: "Status", value: "status_ketersediaan"},
         { text: "Action", value:'actions'},

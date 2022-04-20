@@ -51,7 +51,7 @@
                   <v-layout justify-end>
                     <v-btn
                       class="mr-2"
-                      @click="login"
+                      @click="submit"
                       :class="{
                         'blue darken-1 white--text': valid,
                         disabled: !valid,
@@ -90,7 +90,7 @@ export default {
     };
   },
   methods: {
-    login(){
+    submit(){
       let url = this.$api + "/login";
       this.$http.post(url, {
         email: this.email,
@@ -99,22 +99,22 @@ export default {
 
         if(response.data.data.id_customer != null)
         {
-          localStorage.setItem("token", response.data.access_token);
+          localStorage.setItem("token", response.data.token);
           localStorage.setItem("id_customer", response.data.data.id_customer);
-          localStorage.setItem("email", response.data.data.email);
+          localStorage.setItem("email", response.data.data.email_customer);
         }
         else if(response.data.data.id_pegawai != null)
         {
-          localStorage.setItem("token", response.data.access_token);
-          localStorage.setItem("id_pegawai", response.data.data.id_driver);
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("id_pegawai", response.data.data.id_pegawai);
           localStorage.setItem("email", response.data.data.email);
           localStorage.setItem("nama_role", response.data.data.nama_role);
         }
         else if(response.data.data.id_driver != null)
         {
-          localStorage.setItem("token", response.data.access_token);
+          localStorage.setItem("token", response.data.token);
           localStorage.setItem("id_driver", response.data.data.id_driver);
-          localStorage.setItem("email", response.data.data.email);
+          localStorage.setItem("email", response.data.data.email_driver);
         }
         else
         {
@@ -122,44 +122,52 @@ export default {
         }
 
         this.$router.push("/dashboard");
-
         this.error_message = response.data.message;
+        this.color = "blue";
         this.snackbar = true;
+        this.clear();
+        this.load = false;
+      })
+      .catch((error) => {
+        this.error_message = error.response.data.message;
+        this.color = "red";
+        this.snackbar = true;
+        localStorage.removeItem("token");
         this.load = false;
       })
     },
 
     mounted(){
-      if(localStorage.getItem('id_customer')!=null)
-      {
-        this.$http.get(this.$api+'/customer/'+localStorage.getItem('id_customer'))
-        .then(response => {
-          this.customer = response.data.data
-        })
-        .catch(error => {console.log(error)})
-      }
-      else if(localStorage.getItem('id_pegawai')!=null)
-      {
-        this.$http.get(this.$api+'/pegawai/'+localStorage.getItem('id_pegawai'))
-        .then(response => {
-          this.customer = response.data.data
-          this.foto_pegawai = response.data.data.foto
-        })
-        .catch(error => {console.log(error)})
-      }
-      else if(localStorage.getItem('id_driver')!=null)
-      {
-        this.$http.get(this.$api+'/driver/'+localStorage.getItem('id_driver'))
-        .then(response => {
-          this.customer = response.data.data
-          this.foto_driver = response.data.data.foto
-        })
-        .catch(error => {console.log(error)})
-      }
-      else
-      {
-        this.$router.push("/login");
-      }
+      // if(localStorage.getItem('id_customer')!=null)
+      // {
+      //   this.$http.get(this.$api+'/customer/'+localStorage.getItem('id_customer'))
+      //   .then(response => {
+      //     this.customer = response.data.data
+      //   })
+      //   .catch(error => {console.log(error)})
+      // }
+      // else if(localStorage.getItem('id_pegawai')!=null)
+      // {
+      //   this.$http.get(this.$api+'/pegawai/'+localStorage.getItem('id_pegawai'))
+      //   .then(response => {
+      //     this.customer = response.data.data
+          
+      //   })
+      //   .catch(error => {console.log(error)})
+      // }
+      // else if(localStorage.getItem('id_driver')!=null)
+      // {
+      //   this.$http.get(this.$api+'/driver/'+localStorage.getItem('id_driver'))
+      //   .then(response => {
+      //     this.driver = response.data.data
+          
+      //   })
+      //   .catch(error => {console.log(error)})
+      // }
+      // else
+      // {
+      //   this.$router.push("/login");
+      // }
     }
     
   },

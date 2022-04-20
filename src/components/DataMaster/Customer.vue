@@ -29,14 +29,32 @@
         <template v-slot:[`item.upload_berkas`]="{item}">
           <v-img :src="$baseUrl+'/storage/'+item.upload_berkas" height="100px" width="100px" style="object-fit:cover"/>  
         </template>
-          <template v-slot:[`item.actions`]="{item}">
-                <v-btn icon small class="mr-2" @click="editHandler(item)">
-                  <v-icon color="red">mdi-pencil</v-icon>
-                </v-btn>
-                <v-btn icon small @click="showHandler(item)">
-                     <v-icon color="black">mdi-view-list</v-icon>
-                </v-btn>
-          </template>
+           <template v-slot:[`item.actions`]="{item}">
+              <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    color="primary"
+                    dark
+                    v-bind="attrs"
+                    v-on="on">
+                    <v-icon>mdi-dots-vertical</v-icon>
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item-title>
+                    <v-btn  @click="editHandler(item)">
+                      Edit Customer
+                    </v-btn>
+                  </v-list-item-title>
+
+                  <v-list-item-title>
+                    <v-btn  @click="showHandler(item)">
+                        Berkas Customer
+                    </v-btn>
+                  </v-list-item-title>
+                </v-list>
+              </v-menu>    
+        </template>
       </v-data-table>
     </v-card>
     
@@ -54,7 +72,7 @@
             <v-text-field v-model="form.email_customer" label="Email Customer" required></v-text-field>
             <v-text-field v-model="form.no_telp" label="Nomor Telepon" required></v-text-field>
             <v-file-input rounded filled prepend-icon="mdi-camera" label="Upload Berkas" id="file" ref="fileGambar"></v-file-input>
-            <v-select :items="statusBerkas" v-model="form.status_berkas" label="Status Berkas" item-value="value" item-text="text" ></v-select>
+            
             <v-text-field v-model="form.nomor_kartupengenal" label="Nomor KTP / KTM" required></v-text-field>
             <v-text-field v-model="form.no_sim" label="Nomor SIM" required></v-text-field>
             <v-text-field v-model="form.asal_customer" label="Asal Customer" required></v-text-field>
@@ -100,6 +118,7 @@
                     :src="previewImageUrl == '' ? $baseUrl+'/storage/'+form.upload_berkas : previewImageUrl"
                     id="previewImage" class="mb-5"></v-img>
             </v-flex>
+            <v-select :items="statusBerkas" v-model="form.status_berkas" label="Status Berkas" item-value="value" item-text="text" ></v-select>
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -331,7 +350,8 @@ export default {
     showHandler(item){
       this.inputType = 'Ubah';
       this.editId = item.id_customer,
-      this.form.upload_berkas = item.upload_berkas
+      this.form.upload_berkas = item.upload_berkas,
+      this.form.status_berkas = item.status_berkas,
       this.dialogFoto = true;
     },
 

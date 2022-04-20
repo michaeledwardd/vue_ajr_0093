@@ -68,15 +68,21 @@ export default {
         { icon : "mdi-handshake-outline", title: "Mitra", to:"/mitra"},
         { icon : "mdi-account-group", title: "Customer", to:"/customer"},
         { icon : "mdi-currency-usd", title: "Transaksi", to:"/transaksi"},
+        { icon : "mdi-briefcase-check", title: "Aset Mitra", to:"/aset"}
       ],
       mini: true,
     };
   },
   methods: {
     btnLogout() {
-      localStorage.removeItem('id');
+      localStorage.removeItem('email_customer');
+      localStorage.removeItem('email_driver');
+      localStorage.removeItem('email');
       localStorage.removeItem('token');
-      location.reload();
+      localStorage.removeItem('id_customer');
+      localStorage.removeItem('id_driver');
+      localStorage.removeItem('id_pegawai');
+      this.$router.push('/login');
     },
   }
 };
