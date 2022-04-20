@@ -34,14 +34,36 @@
               <v-chip color="blue">Perusahaan</v-chip>
             </span>
           </template>
-        <template v-slot:[`item.actions`]="{item}">
-                <v-btn icon small class="mr-2" @click="editHandler(item)">
-                  <v-icon color="red">mdi-pencil</v-icon>
-                </v-btn>
-                <v-btn icon small @click="showHandler(item)">
-                     <v-icon color="black">mdi-view-list</v-icon>
-                </v-btn>
+       <template v-slot:[`item.actions`]="{item}">
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                color="primary"
+                dark
+                v-bind="attrs"
+                v-on="on">
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
             </template>
+            <v-list>
+              <v-list-item-title>
+                <v-btn  @click="editHandler(item)">
+                  Edit Mobil
+                </v-btn>
+              </v-list-item-title>
+              <v-list-item-title>
+                <v-btn  @click="detailHandler(item)">
+                  Detail Mobil
+                </v-btn>
+              </v-list-item-title>
+              <v-list-item-title>
+                <v-btn  @click="showHandler(item)">
+                     Foto Mobil
+                </v-btn>
+              </v-list-item-title>
+            </v-list>
+          </v-menu>    
+        </template>
 
       </v-data-table>
     </v-card>
@@ -89,7 +111,7 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-text-field v-model="form.updated_at" label="Terakhir Update" required></v-text-field>
+            <v-text-field readonly v-model="form.updated_at" label="Terakhir Update" required></v-text-field>
             <v-flex align-center>
                 <v-img width="550px"
                     :src="previewImageUrl == '' ? $baseUrl+'/storage/'+form.foto_mobil : previewImageUrl"

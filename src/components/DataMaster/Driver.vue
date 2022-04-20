@@ -68,14 +68,34 @@
               <v-chip color="blue">Tidak Tersedia</v-chip>
             </span>
           </template>
+
         <template v-slot:[`item.actions`]="{item}">
-                <v-btn icon small class="mr-2" @click="editHandler(item)">
-                  <v-icon color="red">mdi-pencil</v-icon>
-                </v-btn>
-                <v-btn icon small @click="showHandler(item)">
-                     <v-icon color="black">mdi-view-list</v-icon>
-                </v-btn>
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                color="primary"
+                dark
+                v-bind="attrs"
+                v-on="on">
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
             </template>
+            <v-list>
+              <v-list-item-title>
+                <v-btn  @click="editHandler(item)">
+                  Edit Driver
+                </v-btn>
+              </v-list-item-title>
+
+              <v-list-item-title>
+                <v-btn  @click="showHandler(item)">
+                    Lihat Berkas
+                </v-btn>
+              </v-list-item-title>
+            </v-list>
+          </v-menu>    
+        </template>
+
 
       </v-data-table>
     </v-card>

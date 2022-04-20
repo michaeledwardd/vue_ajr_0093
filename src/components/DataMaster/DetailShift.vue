@@ -27,11 +27,6 @@
                      <v-icon color="green">mdi-delete</v-icon>
                 </v-btn>
             </template>
-
-        <!-- <template v-slot:[`item.actions`]="{ item }">
-          <v-btn small class="mr-2" @click="editHandler(item)"> edit </v-btn>
-          <v-btn small @click="deleteHandler(item.id)"> delete </v-btn>
-        </template> -->
       </v-data-table>
     </v-card>
     
@@ -61,7 +56,7 @@
         <v-card-title>
           <span class="headline">warning!</span>
         </v-card-title>
-        <v-card-text> Anda yakin ingin menghapus kelas ini? </v-card-text>
+        <v-card-text> Anda yakin ingin menghapus jadwal ini? </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="dialogConfirm = false">

@@ -53,7 +53,7 @@
                       class="mr-2"
                       @click="login"
                       :class="{
-                        'grey darken-1 white--text': valid,
+                        'blue darken-1 white--text': valid,
                         disabled: !valid,
                       }"
                       >Login
@@ -72,23 +72,7 @@
   </main>
 </template>
 
- <style scoped>
-.posisinya {
-  position: absolute;
-  left: 0px;
-  right: 0px;
-  font-family: "Montserrat", sans-serif;
-}
-
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 15px;
-}
-</style>
-
- <script>
+<script>
 export default {
   name: "Login",
   data() {
@@ -106,11 +90,97 @@ export default {
     };
   },
   methods: {
+    login(){
+      let url = this.$api + "/login";
+      this.$http.post(url, {
+        email: this.email,
+        password: this.password,
+      }).then((response)=> {
 
+        if(response.data.data.id_customer != null)
+        {
+          localStorage.setItem("token", response.data.access_token);
+          localStorage.setItem("id_customer", response.data.data.id_customer);
+          localStorage.setItem("email", response.data.data.email);
+        }
+        else if(response.data.data.id_pegawai != null)
+        {
+          localStorage.setItem("token", response.data.access_token);
+          localStorage.setItem("id_pegawai", response.data.data.id_driver);
+          localStorage.setItem("email", response.data.data.email);
+          localStorage.setItem("nama_role", response.data.data.nama_role);
+        }
+        else if(response.data.data.id_driver != null)
+        {
+          localStorage.setItem("token", response.data.access_token);
+          localStorage.setItem("id_driver", response.data.data.id_driver);
+          localStorage.setItem("email", response.data.data.email);
+        }
+        else
+        {
+          return false;
+        }
+
+        this.$router.push("/dashboard");
+
+        this.error_message = response.data.message;
+        this.snackbar = true;
+        this.load = false;
+      })
+    },
+
+    mounted(){
+      if(localStorage.getItem('id_customer')!=null)
+      {
+        this.$http.get(this.$api+'/customer/'+localStorage.getItem('id_customer'))
+        .then(response => {
+          this.customer = response.data.data
+        })
+        .catch(error => {console.log(error)})
+      }
+      else if(localStorage.getItem('id_pegawai')!=null)
+      {
+        this.$http.get(this.$api+'/pegawai/'+localStorage.getItem('id_pegawai'))
+        .then(response => {
+          this.customer = response.data.data
+          this.foto_pegawai = response.data.data.foto
+        })
+        .catch(error => {console.log(error)})
+      }
+      else if(localStorage.getItem('id_driver')!=null)
+      {
+        this.$http.get(this.$api+'/driver/'+localStorage.getItem('id_driver'))
+        .then(response => {
+          this.customer = response.data.data
+          this.foto_driver = response.data.data.foto
+        })
+        .catch(error => {console.log(error)})
+      }
+      else
+      {
+        this.$router.push("/login");
+      }
+    }
     
   },
 };
 </script> 
+
+<style scoped>
+.posisinya {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  font-family: "Montserrat", sans-serif;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+}
+</style>
 
 <style scoped>
 .centered {
