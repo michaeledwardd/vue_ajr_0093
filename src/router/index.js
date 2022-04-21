@@ -103,10 +103,10 @@ const router = new VueRouter({
 
         //register
         {
-            path: '/register',
-            name: 'Register',
-            meta: { title: 'Register' },
-            component: importComponent('Register'),
+            path: '/profile',
+            name: 'Profile',
+            meta: { title: 'Profile' },
+            component: importComponent('Profile'),
         },
         //login
         {
@@ -114,6 +114,13 @@ const router = new VueRouter({
             name: 'Login',
             meta: { title: 'Login' },
             component: importComponent('Login'),
+        },
+        //login
+        {
+            path: '/home',
+            name: 'Home',
+            meta: { title: 'Atma Jaya Rental' },
+            component: importComponent('Home'),
         },
         {
             path: '*',
@@ -135,8 +142,8 @@ router.beforeEach((to, from, next) => {
     to.name == "Promo" && localStorage.getItem("token") == null ||
     to.name == "Role" && localStorage.getItem("token") == null ||
     to.name == "Transaksi" && localStorage.getItem("token") == null){
-        next('login')
-        document.to.meta.title = "Login"
+        next('home')
+        document.to.meta.title = "Home"
     }
 
     if(to.name == "DetailShift" && localStorage.getItem("nama_role") != 'Manager' && localStorage.getItem("token") == null ||

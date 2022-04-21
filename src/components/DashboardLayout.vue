@@ -38,7 +38,7 @@
       <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon> -->
       <VSpacer />
       <v-toolbar-items>
-         <v-btn text router @click = "btnLogout"><v-icon>mdi-account</v-icon></v-btn>
+         <v-btn text router @click = "btnProfile"><v-icon>mdi-account</v-icon></v-btn>
         <v-btn text router @click = "btnLogout"><v-icon>mdi-power</v-icon></v-btn>
        
       </v-toolbar-items>
@@ -82,8 +82,11 @@ export default {
       localStorage.removeItem('id_customer');
       localStorage.removeItem('id_driver');
       localStorage.removeItem('id_pegawai');
-      this.$router.push('/login');
+      this.$router.push('/home');
     },
+    btnProfile(){
+      this.$router.push('/profile');
+    }
   }
 };
 </script>
