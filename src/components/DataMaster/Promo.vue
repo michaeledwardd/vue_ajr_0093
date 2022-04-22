@@ -92,6 +92,7 @@ export default {
       load: false,
       snackbar: false,
       error_message: '',
+      kodeRules: [(v) => !!v || "Kode Promo tidak boleh kosong"],
       color: '',
       search: null,
       dialog: false,
@@ -111,11 +112,11 @@ export default {
       promo: new FormData,
       promos: [],
       form:{
-        kode_promo: null,
-        jenis_promo: null,
-        jumlah_potongan: null,
-        keterangan: null,
-        status_promo: null,
+        kode_promo: '',
+        jenis_promo: '',
+        jumlah_potongan: '',
+        keterangan: '',
+        status_promo: '',
       },
       deleteId: '',
       editId: ''
@@ -142,6 +143,7 @@ export default {
         this.promos = response.data.data;
       })
     },
+
 
     save(){
       this.promo.append('kode_promo',this.form.kode_promo);

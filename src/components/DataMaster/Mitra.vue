@@ -105,11 +105,11 @@ export default {
       mitra: new FormData,
       mitras: [],
       form:{
-        nama_mitra: null,
-        alamat: null,
-        nomor_ktp: null,
-        nomor_telepon: null,
-        is_aktif: null,
+        nama_mitra: '',
+        alamat: '',
+        nomor_ktp: '',
+        nomor_telepon: '',
+        is_aktif: '',
       },
       deleteId: '',
       editId: ''
@@ -254,11 +254,11 @@ export default {
     },
     resetForm() {
       this.form = {
-        nama_mitra: null,
-        alamat: null,
-        nomor_ktp: null,
-        nomor_telepon: null,
-        is_aktif: null,
+        nama_mitra: '',
+        alamat: '',
+        nomor_ktp: '',
+        nomor_telepon: '',
+        is_aktif: '',
       };
     },
   },

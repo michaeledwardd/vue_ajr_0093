@@ -108,7 +108,7 @@ export default {
           localStorage.setItem("token", response.data.token);
           localStorage.setItem("id_pegawai", response.data.data.id_pegawai);
           localStorage.setItem("email", response.data.data.email);
-          localStorage.setItem("nama_role", response.data.data.nama_role);
+          localStorage.setItem("id_role", response.data.data.id_role);
         }
         else if(response.data.data.id_driver != null)
         {
@@ -135,41 +135,7 @@ export default {
         localStorage.removeItem("token");
         this.load = false;
       })
-    },
-
-    mounted(){
-      // if(localStorage.getItem('id_customer')!=null)
-      // {
-      //   this.$http.get(this.$api+'/customer/'+localStorage.getItem('id_customer'))
-      //   .then(response => {
-      //     this.customer = response.data.data
-      //   })
-      //   .catch(error => {console.log(error)})
-      // }
-      // else if(localStorage.getItem('id_pegawai')!=null)
-      // {
-      //   this.$http.get(this.$api+'/pegawai/'+localStorage.getItem('id_pegawai'))
-      //   .then(response => {
-      //     this.customer = response.data.data
-          
-      //   })
-      //   .catch(error => {console.log(error)})
-      // }
-      // else if(localStorage.getItem('id_driver')!=null)
-      // {
-      //   this.$http.get(this.$api+'/driver/'+localStorage.getItem('id_driver'))
-      //   .then(response => {
-      //     this.driver = response.data.data
-          
-      //   })
-      //   .catch(error => {console.log(error)})
-      // }
-      // else
-      // {
-      //   this.$router.push("/login");
-      // }
-    }
-    
+    }, 
   },
 };
 </script> 

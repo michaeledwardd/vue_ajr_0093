@@ -146,9 +146,9 @@ router.beforeEach((to, from, next) => {
         document.to.meta.title = "Home"
     }
 
-    if(to.name == "DetailShift" && localStorage.getItem("nama_role") != 'Manager' && localStorage.getItem("token") == null ||
-    to.name == "Jadwal" && localStorage.getItem("nama_role") != 'Manager' && localStorage.getItem("token") == null ||
-    to.name == "Promo" && localStorage.getItem("nama_role") != 'Manager' && localStorage.getItem("token") == null){
+    if(to.name == "DetailShift" && localStorage.getItem("id_role") != "1" && localStorage.getItem("token") == null ||
+    to.name == "Jadwal" && localStorage.getItem("id_role") != "1" && localStorage.getItem("token") == null ||
+    to.name == "Promo" && localStorage.getItem("id_role") != "1" && localStorage.getItem("token") == null){
         next('dashboard')
         document.to.meta.title = "Dashboard"
     }

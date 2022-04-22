@@ -98,10 +98,10 @@ export default {
       jadwal: new FormData,
       jadwals: [],
       form:{
-        hari_kerja: null,
-        jenis_shift: null,
-        jam_mulai: null,
-        jam_selesai: null,
+        hari_kerja: '',
+        jenis_shift: '',
+        jam_mulai: '',
+        jam_selesai: '',
       },
       deleteId: '',
       editId: ''
@@ -244,10 +244,10 @@ export default {
     },
     resetForm() {
       this.form = {
-       hari_kerja: null,
-        jenis_shift: null,
-        jam_mulai: null,
-        jam_selesai: null,
+       hari_kerja: '',
+        jenis_shift: '',
+        jam_mulai: '',
+        jam_selesai: '',
       };
     },
   },

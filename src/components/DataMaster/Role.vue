@@ -94,8 +94,8 @@ export default {
       role: new FormData,
       roles: [],
       form:{
-        nama_role: null,
-        peranan: null,
+        nama_role: '',
+        peranan: '',
       },
       deleteId: '',
       editId: ''
@@ -232,8 +232,8 @@ export default {
     },
     resetForm() {
       this.form = {
-        nama_role: null,
-        peranan: null,
+        nama_role: '',
+        peranan: '',
       };
     },
   },

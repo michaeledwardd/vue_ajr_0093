@@ -98,8 +98,8 @@ export default {
       pegawais: [],
       jadwals: [],
       form:{
-        id_jadwal: null,
-        id_pegawai: null,
+        id_jadwal: '',
+        id_pegawai: '',
       },
       deleteId: '',
       editId: ''
