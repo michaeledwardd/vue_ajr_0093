@@ -153,7 +153,7 @@ export default {
       this.detailshift.append('id_jadwal',this.form.id_jadwal);
       this.detailshift.append('id_pegawai',this.form.id_pegawai);
 
-      var url= this.$api + '/detailshift/'
+      var url= this.$api + '/detailshift/' + this.form.id_pegawai;
       this.load = true;
       this.$http.post(url, this.detailshift, {
         headers: {

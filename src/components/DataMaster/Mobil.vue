@@ -103,6 +103,40 @@
       </v-card>
     </v-dialog>
 
+    <v-dialog v-model="dialogDetail" persistent max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">{{formTitle}} Mobil</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-text-field readonly v-model="form.nama_mobil" label="Nama Mobil" required></v-text-field>
+            <v-text-field readonly v-model="form.jenis_transmisi" label="Jenis Transmisi" required></v-text-field>
+            <v-text-field readonly v-model="form.bahan_bakar" label="Bahan bakar" required></v-text-field>
+            <v-text-field readonly v-model="form.warna" label="Warna mobil" required></v-text-field>
+            <v-text-field readonly v-model="form.volume_bagasi" label="Volume Bagasi" required></v-text-field>
+            <v-text-field readonly v-model="form.fasilitas" label="Fasilitas" required></v-text-field>
+            <v-select :items="kepemilikan" readonly v-model="form.kategori_aset" label="Kepemilikan" item-value="value" item-text="text" ></v-select>
+            <v-select :items="statusKetersediaan" readonly v-model="form.status_ketersediaan" label="Status Mobil" item-value="value" item-text="text" ></v-select>
+            <v-text-field readonly v-model="form.plat_nomor" label="Plat Nomor" required></v-text-field>
+            <v-file-input readonly rounded filled prepend-icon="mdi-camera" label="Foto Mobil" id="file" ref="fileGambar"></v-file-input>
+             <v-select :items="tipeMobil" readonly v-model="form.tipe_mobil" label="Tipe Mobil" item-value="value" item-text="text" ></v-select>
+            <v-text-field readonly v-model="form.kapasitas" label="Kapasitas" required></v-text-field>
+            <v-text-field readonly v-model="form.biaya_sewa" label="Biaya sewa" required></v-text-field>
+            <v-text-field readonly type="date" v-model="form.last_service" label="Tanggal terakhir service" required></v-text-field>
+            <v-text-field readonly type="date" v-model="form.awal_kontrak" label="Tanggal awal kontrak" required></v-text-field>
+            <v-text-field readonly type="date" v-model="form.akhir_kontrak" label="Tanggal akhir kontrak" required></v-text-field>
+            <v-text-field readonly v-model="form.nomor_stnk" label="Nomor STNK" required></v-text-field>
+            <v-select :items="mitras" clearable readonly v-model="form.id_mitra" label="Nama Mitra" item-value="id_mitra" item-text="nama_mitra" ></v-select>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="black darken-1" text @click="cancel"> Close </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
 
     <v-dialog v-model="dialogFoto" persistent max-width="600px">
       <v-card>
@@ -163,6 +197,7 @@ export default {
       search: null,
       dialog: false,
       dialogFoto: false,
+      dialogDetail: false,
       dialogConfirm: false,
       tipeMobil: [
         { text: "City car", value: 'city car'},
@@ -409,6 +444,30 @@ export default {
       this.dialog = true;
     },
 
+    detailHandler(item){
+      this.inputType = 'Ubah';
+      this.editId = item.id_mobil;
+      this.form.id_mitra = item.id_mitra;
+      this.form.nama_mobil = item.nama_mobil;
+      this.form.jenis_transmisi = item.jenis_transmisi;
+      this.form.bahan_bakar = item.bahan_bakar;
+      this.form.warna = item.warna;
+      this.form.volume_bagasi = item.volume_bagasi;
+      this.form.fasilitas = item.fasilitas;
+      this.form.kategori_aset = item.kategori_aset;
+      this.form.status_ketersediaan = item.status_ketersediaan;
+      this.form.plat_nomor = item.plat_nomor;
+      this.form.foto_mobil = item.foto_mobil;
+      this.form.tipe_mobil = item.tipe_mobil;
+      this.form.kapasitas = item.kapasitas;
+      this.form.biaya_sewa = item.biaya_sewa;
+      this.form.last_service = item.last_service;
+      this.form.awal_kontrak = item.awal_kontrak;
+      this.form.akhir_kontrak = item.akhir_kontrak;
+      this.form.nomor_stnk = item.nomor_stnk;
+      this.dialogDetail = true;
+    },
+
     showHandler(item){
       this.inputType = 'Ubah';
       this.editId = item.id_mobil;
@@ -433,6 +492,7 @@ export default {
       this.dialog = false;
       this.dialogConfirm = false;
       this.dialogFoto = false;
+      this.dialogDetail = false;
       this.inputType = "Tambah";
     },
     resetForm() {

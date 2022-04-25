@@ -101,6 +101,7 @@ export default {
         {
           localStorage.setItem("token", response.data.token);
           localStorage.setItem("id_customer", response.data.data.id_customer);
+          // localStorage.setItem("nama_customer", response.data.data.nama_customer);
           localStorage.setItem("email", response.data.data.email_customer);
         }
         else if(response.data.data.id_pegawai != null)
@@ -108,6 +109,7 @@ export default {
           localStorage.setItem("token", response.data.token);
           localStorage.setItem("id_pegawai", response.data.data.id_pegawai);
           localStorage.setItem("email", response.data.data.email);
+          localStorage.setItem("nama_pegawai",response.data.data.nama_pegawai);
           localStorage.setItem("id_role", response.data.data.id_role);
         }
         else if(response.data.data.id_driver != null)

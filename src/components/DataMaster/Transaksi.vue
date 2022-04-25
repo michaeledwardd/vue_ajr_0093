@@ -277,6 +277,7 @@ export default {
         { text: "Metode Bayar", value: 'metode_bayar'},
         { text: "Jenis Peminjaman", value: 'jenis_peminjaman'},
         { text: "Status Transaksi", value:'status_transaksi'},
+        { text: "Jumlah bayar", value: 'subtotal_all'},
         { text: "Action", value:'actions'},
       ],
       transaksi: new FormData,

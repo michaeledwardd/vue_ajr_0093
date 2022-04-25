@@ -152,6 +152,18 @@ router.beforeEach((to, from, next) => {
         next('dashboard')
         document.to.meta.title = "Dashboard"
     }
+
+    if(to.name == "Transaksi" && localStorage.getItem("id_role") != "3" && localStorage.getItem("token") != null ||
+    to.name == "Customer" && localStorage.getItem("id_role") != "3" && localStorage.getItem("token") != null){
+        next('dashboard')
+        document.to.meta.title = "Dashboard"
+    }
+
+    if(to.name == "Transaksi" && localStorage.getItem("id_customer") != null && localStorage.getItem("token") != null ||
+    to.name == "Mobil" && localStorage.getItem("id_customer") != null && localStorage.getItem("token") != null){
+        next('dashboard')
+        document.to.meta.title = "Dashboard"
+    }
     
     document.title = to.meta.title;
     next();

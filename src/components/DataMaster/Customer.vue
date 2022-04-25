@@ -78,6 +78,7 @@
             <v-text-field v-model="form.asal_customer" label="Asal Customer" required></v-text-field>
             <v-text-field v-model="form.password" label="Password" required></v-text-field>
             <v-text-field v-model="form.usia_customer" label="Usia Customer" required></v-text-field>
+            <v-select :items="statusBerkas" v-model="form.status_berkas" label="Status Berkas" item-value="value" item-text="text" ></v-select>
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -118,7 +119,7 @@
                     :src="previewImageUrl == '' ? $baseUrl+'/storage/'+form.upload_berkas : previewImageUrl"
                     id="previewImage" class="mb-5"></v-img>
             </v-flex>
-            <v-select :items="statusBerkas" v-model="form.status_berkas" label="Status Berkas" item-value="value" item-text="text" ></v-select>
+           
           </v-container>
         </v-card-text>
         <v-card-actions>
