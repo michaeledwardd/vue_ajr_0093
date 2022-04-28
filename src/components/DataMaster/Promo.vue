@@ -30,9 +30,9 @@
                 <v-btn icon small class="mr-2" @click="editHandler(item)">
                   <v-icon color="red">mdi-pencil</v-icon>
                 </v-btn>
-                <v-btn icon small @click="deleteHandler(item.id_promo)">
+                <!-- <v-btn icon small @click="deleteHandler(item.id_promo)">
                      <v-icon color="green">mdi-delete</v-icon>
-                </v-btn>
+                </v-btn> -->
             </template>
 
       </v-data-table>
@@ -92,7 +92,6 @@ export default {
       load: false,
       snackbar: false,
       error_message: '',
-      kodeRules: [(v) => !!v || "Kode Promo tidak boleh kosong"],
       color: '',
       search: null,
       dialog: false,

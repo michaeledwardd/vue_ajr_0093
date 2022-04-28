@@ -376,6 +376,7 @@ export default {
         this.color = "green";
         this.snackbar = true;
         this.load = true;
+        location.reload();
         this.close();
         this.readData();
         this.resetForm();
@@ -453,6 +454,7 @@ export default {
         this.color = 'green';
         this.snackbar = true;
         this.load = false;
+        location.reload();
         this.close();
         this.readData();
         this.resetForm();

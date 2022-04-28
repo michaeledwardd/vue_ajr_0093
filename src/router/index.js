@@ -98,6 +98,27 @@ const router = new VueRouter({
                     meta: {title : 'Aset'},
                     component: importComponent('DataMaster/Aset'),
                 },
+                //riwayatTransaksiCustomer
+                {
+                    path: '/riwayattransaksi',
+                    name: 'RiwayatTransaksi',
+                    meta: {title : 'Riwayat Transaksi'},
+                    component: importComponent('Customer/RiwayatTransaksi'),
+                },
+                //riwayatTransaksiCustomer
+                {
+                    path: '/mobilcustomer',
+                    name: 'MobilCustomer',
+                    meta: {title : 'List Mobil Customer'},
+                    component: importComponent('Customer/MobilCustomer'),
+                },
+                 //riwayatTransaksiCustomer
+                 {
+                    path: '/drivercustomer',
+                    name: 'DriverCustomer',
+                    meta: {title : 'List Driver Customer'},
+                    component: importComponent('Customer/DriverCustomer'),
+                },
             ],
         },
 
@@ -153,14 +174,25 @@ router.beforeEach((to, from, next) => {
         document.to.meta.title = "Dashboard"
     }
 
+    if(to.name == "Pegawai" && localStorage.getItem("id_role") != "2" && localStorage.getItem("token") == null ||
+    to.name == "Mobil" && localStorage.getItem("id_role") != "2" && localStorage.getItem("token") == null ||
+    to.name == "Aset" && localStorage.getItem("id_role") != "2" && localStorage.getItem("token") == null ||
+    to.name == "Mitra" && localStorage.getItem("id_role") != "2" && localStorage.getItem("token") == null ||
+    to.name == "Driver" && localStorage.getItem("id_role") != "2" && localStorage.getItem("token") == null ||
+    to.name == "Role" && localStorage.getItem("id_role") != "2" && localStorage.getItem("token") == null){
+        next('dashboard')
+        document.to.meta.title = "Dashboard"
+    }
+
     if(to.name == "Transaksi" && localStorage.getItem("id_role") != "3" && localStorage.getItem("token") != null ||
     to.name == "Customer" && localStorage.getItem("id_role") != "3" && localStorage.getItem("token") != null){
         next('dashboard')
         document.to.meta.title = "Dashboard"
     }
 
-    if(to.name == "Transaksi" && localStorage.getItem("id_customer") != null && localStorage.getItem("token") != null ||
-    to.name == "Mobil" && localStorage.getItem("id_customer") != null && localStorage.getItem("token") != null){
+    if(to.name == "DriverCustomer" && localStorage.getItem("id_customer") == '' && localStorage.getItem("token") != null ||
+    to.name == "MobilCustomer" && localStorage.getItem("id_customer") == '' && localStorage.getItem("token") != null ||
+    to.name == "RiwayatTransaksi" && localStorage.getItem("id_customer") == '' && localStorage.getItem("token") != null){
         next('dashboard')
         document.to.meta.title = "Dashboard"
     }

@@ -151,8 +151,9 @@ export default {
       ],
       pelanggan: [
          { icon : 'mdi-view-dashboard-outline', title: "Dashboard", to: "/dashboard" },
-         { icon : "mdi-car", title: "Mobil", to:"/mobil"},
-         { icon : "mdi-card-account-details", title: "Driver", to:"/driver"},
+         { icon : "mdi-car", title: "Mobil", to:"/mobilcustomer"},
+         { icon : "mdi-card-account-details", title: "Driver", to:"/drivercustomer"},
+         { icon : "mdi-cash-100", title: "Histori Pembayaran", to:"/riwayattransaksi"},
       ],
       mini: true,
     };

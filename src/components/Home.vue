@@ -64,6 +64,68 @@
 
     <v-snackbar v-model="snackbar" :color="color" timeout="2000" bottom>{{ error_message }} </v-snackbar>
 
+<h2> <center> Data Mobil </center> </h2>
+<v-row>
+  <v-col v-for="(item,index) in mobils" :key="index" md="4">
+  <v-card
+    class="mx-auto"
+    max-width="344"
+  >
+    <v-img
+      :src="$baseUrl+'/storage/'+item.foto_mobil"
+      height="200px"
+    ></v-img>
+
+    <v-card-title>
+      {{ item.nama_mobil }}
+    </v-card-title>
+
+
+    <v-card-subtitle>
+      {{ item.status_ketersediaan}} - {{ item.biaya_sewa }}
+    </v-card-subtitle>
+  </v-card>
+</v-col>
+</v-row>
+
+      <h2>Kunjungi Kami di</h2>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3953.0981282211415!2d110.41394041477812!3d-7.779419494393565!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59f1fb2f2b45%3A0x20986e2fe9c79cdd!2sUniversitas%20Atma%20Jaya%20Yogyakarta%20-%20Kampus%203%20Gedung%20Bonaventura%20Babarsari!5e0!3m2!1sid!2sid!4v1651153750380!5m2!1sid!2sid" 
+        width="600" 
+        height="450" 
+        style="border:0;"
+         allowfullscreen="" 
+         loading="lazy" 
+         referrerpolicy="no-referrer-when-downgrade">
+         </iframe>
+
+<h2> <center> Promo Berlaku </center> </h2>
+<v-row>
+  <v-col v-for="(item,index) in promos" :key="index" md="4">
+  <v-card
+    class="mx-auto"
+    max-width="344"
+  >
+
+    <v-card-title>
+      {{ item.jenis_promo }} - {{ item.kode_promo }}
+    </v-card-title>
+
+    <v-card-subtitle>
+      {{ item.keterangan }} - {{ item.status_promo }}
+    </v-card-subtitle>
+  </v-card>
+</v-col>
+</v-row>
+
+    <v-footer padless>
+    <v-col
+      class="text-center"
+      cols="12"
+    >
+      {{ new Date().getFullYear() }} — <strong>Michael Edward Setiawan - UAJY</strong>
+    </v-col>
+  </v-footer>
+
 </v-main>
 </template>
 
@@ -91,6 +153,8 @@ export default {
         ],
         customer: new FormData,
         customers: [],
+        promos: [],
+        mobils: [],
         form:{
             nama_customer: null,
             alamat_customer: null,
@@ -149,6 +213,16 @@ export default {
         this.load = false;
       });
     },
+    readData(){
+      var url = this.$api + '/promo';
+      this.$http.get(url, {
+        headers: {
+          'Authorization' : 'Bearer ' + localStorage.getItem('token')
+        }
+      }).then(response => {
+        this.promos = response.data.data;
+      })
+    },
      cancel() {
       this.resetForm();
       this.readData();
@@ -181,7 +255,34 @@ export default {
       };
     },
   },
+  mounted(){
+     this.readData();
+
+       this.$http.get(this.$api + '/mobil')
+        .then(response => {
+             this.mobils = response.data.data;
+        }).catch(error => {
+            console.log(error)
+        })
+
+        this.$http.get(this.$api + '/promo')
+        .then(response => {
+             this.promos = response.data.data;
+        }).catch(error => {
+            console.log(error)
+        })
+  },
 };
 </script> 
 
+<style>
 
+*{
+  margin: 0;
+  padding: 0;
+}
+
+#app{
+  margin-top: 0;
+}
+</style>

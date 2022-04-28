@@ -1,6 +1,20 @@
 <template>
   <v-main>
-    <h1 class="text-h3 font-weight-medium mb-5 text-left">Dashboard</h1>
-    <p class="subtitle-1 text-left">Ini Dashboard</p>
+    <v-card
+    class="mx-auto"
+    max-width="344"
+  >
+    <v-card-text>
+      <div></div>
+      <p class="text-h4 text--primary">
+        DASHBOARD PAGE
+      </p>
+      <p>adjective</p>
+      <div class="text--primary">
+        SELAMAT DATANG DI .<br>
+        ATMA JAYA RENTAL 2022
+      </div>
+    </v-card-text>
+  </v-card>
   </v-main>
 </template>
