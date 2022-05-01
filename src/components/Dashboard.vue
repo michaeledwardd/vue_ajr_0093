@@ -9,7 +9,6 @@
       <p class="text-h4 text--primary">
         DASHBOARD PAGE
       </p>
-      <p>adjective</p>
       <div class="text--primary">
         SELAMAT DATANG DI .<br>
         ATMA JAYA RENTAL 2022
