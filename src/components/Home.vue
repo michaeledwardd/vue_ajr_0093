@@ -156,18 +156,18 @@ export default {
         promos: [],
         mobils: [],
         form:{
-            nama_customer: null,
-            alamat_customer: null,
-            tgl_lahir: null,
-            jenis_kelamin: null,
-            email_customer: null,
-            no_telp: null,
-            upload_berkas: null,
-            status_berkas: null,
-            nomor_kartupengenal: null,
-            no_sim: null,
-            asal_customer: null,
-            usia_customer: null
+            nama_customer: [],
+            alamat_customer: [],
+            tgl_lahir: [],
+            jenis_kelamin: [],
+            email_customer: [],
+            no_telp: [],
+            upload_berkas: [],
+            status_berkas: [],
+            nomor_kartupengenal: [],
+            no_sim: [],
+            asal_customer: [],
+            usia_customer: []
       },
     };
   },
@@ -189,8 +189,8 @@ export default {
       this.customer.append('nomor_kartupengenal',this.form.nomor_kartupengenal);
       this.customer.append('no_sim',this.form.no_sim);
       this.customer.append('asal_customer',this.form.asal_customer);
-      this.customer.append('password',this.form.password);
       this.customer.append('usia_customer',this.form.usia_customer);
+      this.customer.append('status_berkas', []);
 
       var url= this.$api + '/customer/'
       this.load = true;
@@ -239,19 +239,19 @@ export default {
     },
     resetForm() {
       this.form = {
-        nama_customer: null,
-        alamat_customer: null,
-        tgl_lahir: null,
-        jenis_kelamin: null,
-        email_customer: null,
-        no_telp: null,
-        upload_berkas: null,
-        status_berkas: null,
-        nomor_kartupengenal: null,
-        no_sim: null,
-        asal_customer: null,
-        password: null,
-        usia_customer: null
+        nama_customer: [],
+        alamat_customer: [],
+        tgl_lahir: [],
+        jenis_kelamin: [],
+        email_customer: [],
+        no_telp: [],
+        upload_berkas: [],
+        status_berkas: [],
+        nomor_kartupengenal: [],
+        no_sim: [],
+        asal_customer: [],
+        password: [],
+        usia_customer: []
       };
     },
   },
