@@ -151,6 +151,7 @@
             <v-text-field type="date" v-model="form.tgl_pinjam" label="Tanggal Peminjaman" required></v-text-field>
             <v-text-field type="date" v-model="form.tgl_kembali" label="Tanggal Pengembalian" required></v-text-field>
             <v-text-field type="time" v-model="form.waktu_kembali" label="Waktu Pengembalian" required></v-text-field>
+            <v-select :items="statusTransaksi" v-model="form.status_transaksi" label="Status Transaksi" item-value="value" item-text="text" ></v-select>
             <v-file-input rounded filled prepend-icon="mdi-camera" label="Bukti Peminjaman" id="buktiBayar" ref="fileBuktiBayar"></v-file-input>
           </v-container>
         </v-card-text>
@@ -190,7 +191,7 @@
           <v-container>
             <v-select :items="promoaktif" clearable v-model="form.id_promo" label="Jenis Promo" item-value="id_promo" item-text="jenis_promo" ></v-select>
              <v-file-input rounded filled prepend-icon="mdi-camera" label="Bukti Bayar" id="buktiBayar" ref="fileBuktiBayar"></v-file-input>
-            <v-select :items="statusTransaksi" v-model="form.status_transaksi" label="Status Transaksi" item-value="value" item-text="text" ></v-select>
+            
             <v-select :items="metodeBayar" v-model="form.metode_bayar" label="Metode Pembayaran" item-value="value" item-text="text" ></v-select>
             <v-text-field type="date" v-model="form.tgl_selesai_pinjam" label="Tanggal Mobil Kembali" required></v-text-field>
             <v-text-field type="time" v-model="form.waktu_selesai_pinjam" label="Waktu Mobil Kembali" required></v-text-field>
@@ -276,7 +277,7 @@ export default {
         { text: "Metode Bayar", value: 'metode_bayar'},
         { text: "Jenis Peminjaman", value: 'jenis_peminjaman'},
         { text: "Status Transaksi", value:'status_transaksi'},
-        { text: "Jumlah bayar", value: 'subtotal_all'},
+        { text: "Jenis Promo", value: 'jenis_promo'},
         { text: "Action", value:'actions'},
       ],
       transaksi: new FormData,
@@ -536,7 +537,7 @@ export default {
             data.append('bukti_bayar',dataFile);
           }
           data.append('metode_bayar', this.form.metode_bayar);
-          data.append('status_transaksi', this.form.status_transaksi);
+          
           data.append('tgl_selesai_pinjam', this.form.tgl_selesai_pinjam);
           data.append('waktu_selesai_pinjam', this.form.waktu_selesai_pinjam);
           if(this.form.id_promo > 0)
@@ -605,7 +606,7 @@ export default {
         data.append('waktu_kembali',this.form.waktu_kembali);
         data.append('tgl_selesai_pinjam', this.form.tgl_selesai_pinjam);
         data.append('waktu_selesai_pinjam',this.form.waktu_selesai_pinjam);
-          
+        data.append('status_transaksi', this.form.status_transaksi);
       var url = this.$api + '/transaksi/' + this.editId;
       this.load = true;
       this.$http.post(url, data, {
@@ -645,7 +646,7 @@ export default {
       this.form.waktu_kembali = item.waktu_kembali;
       this.form.tgl_selesai_pinjam = item.tgl_selesai_pinjam;
       this.form.waktu_selesai_pinjam = item.waktu_selesai_pinjam;
-      
+      this.form.status_transaksi = item.status_transaksi;
       this.dialog = true;
     },
 
@@ -683,7 +684,7 @@ export default {
       this.form.id_promo = item.id_promo;
       this.form.bukti_bayar = item.bukti_bayar;
       this.form.metode_bayar = item.metode_bayar;
-      this.form.status_transaksi = item.status_transaksi;
+      
       this.form.tgl_selesai_pinjam = item.tgl_selesai_pinjam;
       this.form.waktu_selesai_pinjam = item.waktu_selesai_pinjam;
       this.dialogPembayaran = true;
