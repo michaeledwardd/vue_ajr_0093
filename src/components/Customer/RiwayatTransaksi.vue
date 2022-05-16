@@ -133,7 +133,7 @@
             <v-text-field type="date" v-model="form.tgl_pinjam" label="Tanggal Peminjaman" required></v-text-field>
             <v-text-field type="date" v-model="form.tgl_kembali" label="Tanggal Pengembalian" required></v-text-field>
             <v-text-field type="time" v-model="form.waktu_kembali" label="Waktu Pengembalian" required></v-text-field>
-            <!-- <v-text-field type="date" v-model="form.tgl_selesai_pinjam" label="Tanggal Mobil Kembali" required></v-text-field>
+            <v-select :items="statusTransaksi" disabled v-model="form.status_transaksi" label="Status Transaksi" item-value="value" item-text="text" ></v-select>
             <v-text-field type="time" v-model="form.waktu_selesai_pinjam" label="Waktu Mobil Kembali" required></v-text-field> -->
             <v-file-input rounded filled prepend-icon="mdi-camera" label="Bukti Peminjaman" id="buktiBayar" ref="fileBuktiBayar"></v-file-input>
           </v-container>
@@ -566,7 +566,7 @@ export default {
         data.append('waktu_kembali',this.form.waktu_kembali);
         data.append('tgl_selesai_pinjam', this.form.tgl_selesai_pinjam);
         data.append('waktu_selesai_pinjam',this.form.waktu_selesai_pinjam);
-        
+         data.append('status_transaksi',this.form.status_transaksi);
           
       var url = this.$api + '/transaksi/' + this.editId;
       this.load = true;
@@ -607,7 +607,7 @@ export default {
       this.form.waktu_kembali = item.waktu_kembali;
       this.form.tgl_selesai_pinjam = item.tgl_selesai_pinjam;
       this.form.waktu_selesai_pinjam = item.waktu_selesai_pinjam;
-      
+      this.form.status_transaksi = item.status_transaksi;
       this.dialog = true;
     },
 
