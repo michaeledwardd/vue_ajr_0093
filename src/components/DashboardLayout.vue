@@ -151,8 +151,8 @@ export default {
       manager: [
         {
           icon: "mdi-view-dashboard-outline",
-          title: "Dashboard",
-          to: "/dashboard",
+          title: "DashboardPegawai",
+          to: "/dashboardpegawai",
         },
         { icon: "mdi-brightness-percent", title: "Promo", to: "/promo" },
         {
@@ -165,8 +165,8 @@ export default {
       admin: [
         {
           icon: "mdi-view-dashboard-outline",
-          title: "Dashboard",
-          to: "/dashboard",
+          title: "DashboardPegawai",
+          to: "/dashboardpegawai",
         },
         { icon: "mdi-seat-recline-extra", title: "Role", to: "/role" },
         { icon: "mdi-account-group", title: "Pegawai", to: "/pegawai" },
@@ -178,8 +178,8 @@ export default {
       customerservice: [
         {
           icon: "mdi-view-dashboard-outline",
-          title: "Dashboard",
-          to: "/dashboard",
+          title: "DashboardPegawai",
+          to: "/dashboardpegawai",
         },
         { icon: "mdi-account-group", title: "Customer", to: "/customer" },
         { icon: "mdi-currency-usd", title: "Transaksi", to: "/transaksi" },

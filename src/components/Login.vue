@@ -90,57 +90,61 @@ export default {
     };
   },
   methods: {
-    submit(){
+    submit() {
       let url = this.$api + "/login";
-      this.$http.post(url, {
-        email: this.email,
-        password: this.password,
-      }).then((response)=> {
+      this.$http
+        .post(url, {
+          email: this.email,
+          password: this.password,
+        })
+        .then((response) => {
+          if (response.data.data.id_customer != null) {
+            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("id_customer", response.data.data.id_customer);
+            // localStorage.setItem("nama_customer", response.data.data.nama_customer);
+            localStorage.setItem("email", response.data.data.email_customer);
 
-        if(response.data.data.id_customer != null)
-        {
-          localStorage.setItem("token", response.data.token);
-          localStorage.setItem("id_customer", response.data.data.id_customer);
-          // localStorage.setItem("nama_customer", response.data.data.nama_customer);
-          localStorage.setItem("email", response.data.data.email_customer);
-        }
-        else if(response.data.data.id_pegawai != null)
-        {
-          localStorage.setItem("token", response.data.token);
-          localStorage.setItem("id_pegawai", response.data.data.id_pegawai);
-          localStorage.setItem("email", response.data.data.email);
-          localStorage.setItem("nama_pegawai",response.data.data.nama_pegawai);
-          localStorage.setItem("id_role", response.data.data.id_role);
-        }
-        else if(response.data.data.id_driver != null)
-        {
-          localStorage.setItem("token", response.data.token);
-          localStorage.setItem("id_driver", response.data.data.id_driver);
-          localStorage.setItem("email", response.data.data.email_driver);
-        }
-        else
-        {
-          return false;
-        }
+            this.$router.push("/dashboard");
+            this.error_message = response.data.message;
+            this.color = "blue";
+            this.snackbar = true;
+            this.clear();
+            this.load = false;
+          } else if (response.data.data.id_pegawai != null) {
+            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("id_pegawai", response.data.data.id_pegawai);
+            localStorage.setItem("email", response.data.data.email);
+            localStorage.setItem(
+              "nama_pegawai",
+              response.data.data.nama_pegawai
+            );
+            localStorage.setItem("id_role", response.data.data.id_role);
 
-        this.$router.push("/dashboard");
-        this.error_message = response.data.message;
-        this.color = "blue";
-        this.snackbar = true;
-        this.clear();
-        this.load = false;
-      })
-      .catch((error) => {
-        this.error_message = error.response.data.message;
-        this.color = "red";
-        this.snackbar = true;
-        localStorage.removeItem("token");
-        this.load = false;
-      })
-    }, 
+            this.$router.push("/dashboardpegawai");
+            this.error_message = response.data.message;
+            this.color = "blue";
+            this.snackbar = true;
+            this.clear();
+            this.load = false;
+          } else if (response.data.data.id_driver != null) {
+            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("id_driver", response.data.data.id_driver);
+            localStorage.setItem("email", response.data.data.email_driver);
+          } else {
+            return false;
+          }
+        })
+        .catch((error) => {
+          this.error_message = error.response.data.message;
+          this.color = "red";
+          this.snackbar = true;
+          localStorage.removeItem("token");
+          this.load = false;
+        });
+    },
   },
 };
-</script> 
+</script>
 
 <style scoped>
 .posisinya {

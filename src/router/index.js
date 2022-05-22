@@ -16,14 +16,14 @@ const router = new VueRouter({
             children: [
                 //Dashboard
                 {
-                    path: '/',
+                    path: '/dashboardpegawai',
                     name: 'DashboardPegawai',
                     meta: {title : 'DashboardPegawai'},
                     component: importComponent('DashboardPegawai'),
                 },
                 //Dashboard
                 {
-                    path: '/',
+                    path: '/dashboard',
                     name: 'Dashboard',
                     meta: {title : 'Dashboard'},
                     component: importComponent('Dashboard'),

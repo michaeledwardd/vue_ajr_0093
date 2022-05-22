@@ -1,5 +1,8 @@
 <template>
   <v-main>
+    <v-alert dense text type="success">
+      Login Successfully! Welcome <strong>Customer Atma Jaya Rental</strong>
+    </v-alert>
     <v-card v-if="customer != ''" class="mx-auto" max-width="344">
       <v-card-text>
         <div>KARTU CUSTOMER</div>
