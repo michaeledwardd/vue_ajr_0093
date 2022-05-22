@@ -1,7 +1,7 @@
 <template>
   <v-main class="list">
     <h3 class="text font-weight-medium mb-5">Jabatan Pegawai</h3>
-    
+
     <v-card>
       <v-card-title>
         <v-text-field
@@ -14,32 +14,39 @@
 
         <v-spacer></v-spacer>
 
-        <v-btn color="blue" dark @click="dialog = true"> Tambah </v-btn>
-
+        <v-btn class="mx-2" fab dark color="blue" @click="dialog = true">
+          <v-icon dark> mdi-plus </v-icon>
+        </v-btn>
       </v-card-title>
       <v-data-table :headers="headers" :items="roles" :search="search">
-
-        <template v-slot:[`item.actions`]="{item}">
-                <v-btn icon small class="mr-2" @click="editHandler(item)">
-                  <v-icon color="red">mdi-pencil</v-icon>
-                </v-btn>
-                <v-btn icon small @click="deleteHandler(item.id_role)">
-                     <v-icon color="green">mdi-delete</v-icon>
-                </v-btn>
-            </template>
-
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-btn icon small class="mr-2" @click="editHandler(item)">
+            <v-icon color="red">mdi-pencil</v-icon>
+          </v-btn>
+          <v-btn icon small @click="deleteHandler(item.id_role)">
+            <v-icon color="green">mdi-delete</v-icon>
+          </v-btn>
+        </template>
       </v-data-table>
     </v-card>
-    
+
     <v-dialog v-model="dialog" persistent max-width="600px">
       <v-card>
         <v-card-title>
-          <span class="headline">{{formTitle}} Jabatan</span>
+          <span class="headline">{{ formTitle }} Jabatan</span>
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-text-field v-model="form.nama_role" label="Jabatan" required></v-text-field>
-            <v-text-field v-model="form.peranan" label="Peranan" required></v-text-field>
+            <v-text-field
+              v-model="form.nama_role"
+              label="Jabatan"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="form.peranan"
+              label="Peranan"
+              required
+            ></v-text-field>
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -49,7 +56,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
 
     <v-dialog v-model="dialogConfirm" persistent max-width="400px">
       <v-card>
@@ -67,124 +73,131 @@
       </v-card>
     </v-dialog>
 
-       <v-snackbar v-model="snackbar" :color="color" timeout="2000" bottom>{{ error_message }} </v-snackbar>
-
+    <v-snackbar v-model="snackbar" :color="color" timeout="2000" bottom
+      >{{ error_message }}
+    </v-snackbar>
   </v-main>
 </template>
-
 
 <script>
 export default {
   name: "List",
   data() {
     return {
-      inputType: 'Tambah',
+      inputType: "Tambah",
       load: false,
       snackbar: false,
-      error_message: '',
-      color: '',
+      error_message: "",
+      color: "",
       search: null,
       dialog: false,
       dialogConfirm: false,
       headers: [
-        { text: "Jabatan", align: "start", sortable: true, value: "nama_role"},
-        { text: "Tugas", value: 'peranan'},
-        { text: "Action", value:'actions'},
+        { text: "Jabatan", align: "start", sortable: true, value: "nama_role" },
+        { text: "Tugas", value: "peranan" },
+        { text: "Action", value: "actions" },
       ],
-      role: new FormData,
+      role: new FormData(),
       roles: [],
-      form:{
-        nama_role: '',
-        peranan: '',
+      form: {
+        nama_role: "",
+        peranan: "",
       },
-      deleteId: '',
-      editId: ''
+      deleteId: "",
+      editId: "",
     };
   },
 
   methods: {
-    setForm(){
-      if(this.inputType !== 'Tambah'){
+    setForm() {
+      if (this.inputType !== "Tambah") {
         this.update();
-      }
-      else{
+      } else {
         this.save();
       }
     },
 
-    readData(){
-      var url = this.$api + '/role';
-      this.$http.get(url, {
-        headers: {
-          'Authorization' : 'Bearer ' + localStorage.getItem('token')
-        }
-      }).then(response => {
-        this.roles = response.data.data;
-      })
+    readData() {
+      var url = this.$api + "/role";
+      this.$http
+        .get(url, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        })
+        .then((response) => {
+          this.roles = response.data.data;
+        });
     },
 
-    save(){
-      this.role.append('nama_role',this.form.nama_role);
-      this.role.append('peranan',this.form.peranan);
+    save() {
+      this.role.append("nama_role", this.form.nama_role);
+      this.role.append("peranan", this.form.peranan);
 
-      var url= this.$api + '/role/'
+      var url = this.$api + "/role/";
       this.load = true;
-      this.$http.post(url, this.role, {
-        headers: {
-          'Authorization' : 'Bearer ' + localStorage.getItem('token'),
-        }
-      }).then(response => {
-        this.error_message = response.data.message;
-        this.color = "green";
-        this.snackbar = true;
-        this.load = true;
-        this.close();
-        this.readData();
-        this.resetForm();
-      }).catch(error => {
-        this.error_message = error.response.data.message;
-        this.color = "red";
-        this.snackbar = true;
-        this.load = false;
-      });
+      this.$http
+        .post(url, this.role, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        })
+        .then((response) => {
+          this.error_message = response.data.message;
+          this.color = "green";
+          this.snackbar = true;
+          this.load = true;
+          this.close();
+          this.readData();
+          this.resetForm();
+        })
+        .catch((error) => {
+          this.error_message = error.response.data.message;
+          this.color = "red";
+          this.snackbar = true;
+          this.load = false;
+        });
     },
 
-    update(){
+    update() {
       let newData = {
-        nama_role : this.form.nama_role,
-        peranan : this.form.peranan,
-        
+        nama_role: this.form.nama_role,
+        peranan: this.form.peranan,
       };
-      var url = this.$api + '/role/' + this.editId;
+      var url = this.$api + "/role/" + this.editId;
       this.load = true;
-      this.$http.put(url, newData, {
-        headers: {
-          'Authorization' : 'Bearer ' + localStorage.getItem('token')
-        }
-      }).then(response => {
-        this.error_message = response.data.message;
-        this.color = 'green';
-        this.snackbar = true;
-        this.load = false;
-        this.close();
-        this.readData();
-        this.resetForm();
-        this.inputType = 'Tambah';
-      }).catch(error => {
-        this.error_message = error.response.data.message;
-        this.color = 'red';
-        this.snackbar = true;
-        this.load = false;
-      });
+      this.$http
+        .put(url, newData, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        })
+        .then((response) => {
+          this.error_message = response.data.message;
+          this.color = "green";
+          this.snackbar = true;
+          this.load = false;
+          this.close();
+          this.readData();
+          this.resetForm();
+          this.inputType = "Tambah";
+        })
+        .catch((error) => {
+          this.error_message = error.response.data.message;
+          this.color = "red";
+          this.snackbar = true;
+          this.load = false;
+        });
     },
 
     deleteData() {
       //mengahapus data
-      var url = this.$api + '/role/' + this.deleteId;
+      var url = this.$api + "/role/" + this.deleteId;
       //data dihapus berdasarkan id
-      this.$http.delete(url, {
+      this.$http
+        .delete(url, {
           headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
         })
         .then((response) => {
@@ -205,8 +218,8 @@ export default {
         });
     },
 
-    editHandler(item){
-      this.inputType = 'Ubah';
+    editHandler(item) {
+      this.inputType = "Ubah";
       this.editId = item.id_role;
       this.form.nama_role = item.nama_role;
       this.form.peranan = item.peranan;
@@ -232,8 +245,8 @@ export default {
     },
     resetForm() {
       this.form = {
-        nama_role: '',
-        peranan: '',
+        nama_role: "",
+        peranan: "",
       };
     },
   },

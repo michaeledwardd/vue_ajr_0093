@@ -17,6 +17,13 @@ const router = new VueRouter({
                 //Dashboard
                 {
                     path: '/',
+                    name: 'DashboardPegawai',
+                    meta: {title : 'DashboardPegawai'},
+                    component: importComponent('DashboardPegawai'),
+                },
+                //Dashboard
+                {
+                    path: '/',
                     name: 'Dashboard',
                     meta: {title : 'Dashboard'},
                     component: importComponent('Dashboard'),
@@ -170,8 +177,8 @@ router.beforeEach((to, from, next) => {
     if(to.name == "DetailShift" && localStorage.getItem("id_role") != "1" && localStorage.getItem("token") == null ||
     to.name == "Jadwal" && localStorage.getItem("id_role") != "1" && localStorage.getItem("token") == null ||
     to.name == "Promo" && localStorage.getItem("id_role") != "1" && localStorage.getItem("token") == null){
-        next('dashboard')
-        document.to.meta.title = "Dashboard"
+        next('dashboardpegawai')
+        document.to.meta.title = "DashboardPegawai"
     }
 
     if(to.name == "Pegawai" && localStorage.getItem("id_role") != "2" && localStorage.getItem("token") == null ||
@@ -180,14 +187,14 @@ router.beforeEach((to, from, next) => {
     to.name == "Mitra" && localStorage.getItem("id_role") != "2" && localStorage.getItem("token") == null ||
     to.name == "Driver" && localStorage.getItem("id_role") != "2" && localStorage.getItem("token") == null ||
     to.name == "Role" && localStorage.getItem("id_role") != "2" && localStorage.getItem("token") == null){
-        next('dashboard')
-        document.to.meta.title = "Dashboard"
+        next('dashboardpegawai')
+        document.to.meta.title = "DashboardPegawai"
     }
 
     if(to.name == "Transaksi" && localStorage.getItem("id_role") != "3" && localStorage.getItem("token") != null ||
     to.name == "Customer" && localStorage.getItem("id_role") != "3" && localStorage.getItem("token") != null){
-        next('dashboard')
-        document.to.meta.title = "Dashboard"
+        next('dashboardpegawai')
+        document.to.meta.title = "DashboardPegawai"
     }
 
     if(to.name == "DriverCustomer" && localStorage.getItem("id_customer") == '' && localStorage.getItem("token") != null ||

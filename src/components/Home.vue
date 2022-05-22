@@ -143,6 +143,21 @@
       </v-col>
     </v-row>
 
+    <h2><center>Promo Berlaku</center></h2>
+    <v-row>
+      <v-col v-for="(item, index) in promos" :key="index" md="4">
+        <v-card class="mx-auto" max-width="344">
+          <v-card-title>
+            {{ item.jenis_promo }} - {{ item.kode_promo }}
+          </v-card-title>
+
+          <v-card-subtitle>
+            {{ item.keterangan }} - {{ item.status_promo }}
+          </v-card-subtitle>
+        </v-card>
+      </v-col>
+    </v-row>
+
     <v-parallax
       height="300"
       src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
@@ -171,21 +186,6 @@
       referrerpolicy="no-referrer-when-downgrade"
     >
     </iframe>
-
-    <h2><center>Promo Berlaku</center></h2>
-    <v-row>
-      <v-col v-for="(item, index) in promos" :key="index" md="4">
-        <v-card class="mx-auto" max-width="344">
-          <v-card-title>
-            {{ item.jenis_promo }} - {{ item.kode_promo }}
-          </v-card-title>
-
-          <v-card-subtitle>
-            {{ item.keterangan }} - {{ item.status_promo }}
-          </v-card-subtitle>
-        </v-card>
-      </v-col>
-    </v-row>
 
     <v-footer padless>
       <v-col class="text-center" cols="12">

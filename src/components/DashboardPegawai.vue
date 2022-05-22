@@ -1,0 +1,133 @@
+<template>
+  <div class="dashboard">
+    <v-subheader class="py-0 d-flex justify-space-between rounded-lg">
+      <h3>Dashboard</h3>
+    </v-subheader>
+    <br />
+    <v-row>
+      <v-col>
+        <v-alert dense text type="success">
+          Login Successfully! Welcome <strong>Pegawai Atma Jaya Rental</strong>
+        </v-alert>
+        <v-row>
+          <v-col v-for="(item, index) in activityLog" :key="index">
+            <v-card elevation="2" class="rounded-lg">
+              <v-card-text class="d-flex justify-space-between align-center">
+                <div>
+                  <strong>{{ item.title }}</strong> <br />
+                  <span>Berdasarkan sejak awal berdiri</span>
+                </div>
+                <v-avatar
+                  size="60"
+                  :color="item.color"
+                  style="border: 3px solid #444"
+                >
+                  <span style="color: white">{{ item.amount }} +</span>
+                </v-avatar>
+              </v-card-text>
+              <v-card-actions class="d-flex justify-space-between">
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-col>
+      <v-col cols="12" lg="5">
+        <v-card>
+          <v-card-title>Ketentuan Pegawai Atma Jaya Rental</v-card-title>
+          <v-card-text class="py-0">
+            <v-timeline align-top dense>
+              <v-timeline-item color="indigo" small>
+                <strong>Tidak boleh slowrespon</strong>
+                <div class="text-caption">Wajib fastrespon jika dihubungi</div>
+              </v-timeline-item>
+              <v-timeline-item color="green" small>
+                <strong>Cepat dan Tanggap</strong>
+                <div class="text-caption mb-2">Jangan menunda pekerjaan</div>
+              </v-timeline-item>
+              <v-timeline-item color="indigo" small>
+                <strong>Selesaikan kerjaan tepat waktu</strong>
+                <div class="text-caption">
+                  Diusahakan selesai sebelum deadline
+                </div>
+              </v-timeline-item>
+              <v-timeline-item color="green" small>
+                <strong>Berdoalah sebelum bekerja</strong>
+                <div class="text-caption">
+                  Ucapkan doa sebelum memulai kerja agar tidak menemui kesalahan
+                </div>
+              </v-timeline-item>
+            </v-timeline>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "Dashboard",
+  data() {
+    return {
+      activityLog: [
+        {
+          title: "Mobil",
+          amount: 10,
+          icon: "mdi-account",
+          color: "cyan lighten-3",
+        },
+        {
+          title: "Customer",
+          amount: 9,
+          icon: "mdi-account-group-outline",
+          color: "green darken-2",
+        },
+        {
+          title: "Mitra",
+          amount: 5,
+          icon: "mdi-account-group-outline",
+          color: "green darken-2",
+        },
+        {
+          title: "Promo",
+          amount: 4,
+          icon: "mdi-account-group-outline",
+          color: "blue-grey darken-1",
+        },
+        {
+          title: "Driver",
+          amount: 7,
+          icon: "mdi-account-group-outline",
+          color: "deep-orange darken-1",
+        },
+        {
+          title: "Transaksi",
+          amount: 12,
+          icon: "mdi-account-group-outline",
+          color: "deep-orange darken-1",
+        },
+      ],
+    };
+  },
+  methods: {
+    onButtonClick(item) {
+      console.log("click on " + item.no);
+    },
+  },
+};
+</script>
+
+<style scoped>
+.overlap-icon {
+  position: absolute;
+  top: -33px;
+  text-align: center;
+  padding-top: 12px;
+}
+
+*,
+:after,
+:before {
+  background-repeat: no-repeat;
+}
+</style>

@@ -1,7 +1,7 @@
 <template>
   <v-main class="list">
     <h3 class="text font-weight-medium mb-5">Data Waktu Kerja</h3>
-    
+
     <v-card>
       <v-card-title>
         <v-text-field
@@ -14,34 +14,51 @@
 
         <v-spacer></v-spacer>
 
-        <v-btn color="blue" dark @click="dialog = true"> Tambah </v-btn>
-
+        <v-btn class="mx-2" fab dark color="blue" @click="dialog = true">
+          <v-icon dark> mdi-plus </v-icon>
+        </v-btn>
       </v-card-title>
       <v-data-table :headers="headers" :items="jadwals" :search="search">
-
-        <template v-slot:[`item.actions`]="{item}">
-                <v-btn icon small class="mr-2" @click="editHandler(item)">
-                  <v-icon color="red">mdi-pencil</v-icon>
-                </v-btn>
-                <v-btn icon small @click="deleteHandler(item.id_jadwal)">
-                     <v-icon color="green">mdi-delete</v-icon>
-                </v-btn>
-            </template>
-
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-btn icon small class="mr-2" @click="editHandler(item)">
+            <v-icon color="red">mdi-pencil</v-icon>
+          </v-btn>
+          <v-btn icon small @click="deleteHandler(item.id_jadwal)">
+            <v-icon color="green">mdi-delete</v-icon>
+          </v-btn>
+        </template>
       </v-data-table>
     </v-card>
-    
+
     <v-dialog v-model="dialog" persistent max-width="600px">
       <v-card>
         <v-card-title>
-          <span class="headline">{{formTitle}} Data Waktu Kerja</span>
+          <span class="headline">{{ formTitle }} Data Waktu Kerja</span>
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-text-field v-model="form.hari_kerja" label="Hari Kerja" required></v-text-field>
-            <v-text-field v-model="form.jenis_shift" label="Jenis Shift" required></v-text-field>
-            <v-text-field type="time" v-model="form.jam_mulai" label="Jam Mulai" required></v-text-field>
-            <v-text-field type="time" v-model="form.jam_selesai" label="Jam Selesai" required></v-text-field>
+            <v-text-field
+              v-model="form.hari_kerja"
+              label="Hari Kerja"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="form.jenis_shift"
+              label="Jenis Shift"
+              required
+            ></v-text-field>
+            <v-text-field
+              type="time"
+              v-model="form.jam_mulai"
+              label="Jam Mulai"
+              required
+            ></v-text-field>
+            <v-text-field
+              type="time"
+              v-model="form.jam_selesai"
+              label="Jam Selesai"
+              required
+            ></v-text-field>
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -51,7 +68,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
 
     <v-dialog v-model="dialogConfirm" persistent max-width="400px">
       <v-card>
@@ -69,132 +85,144 @@
       </v-card>
     </v-dialog>
 
-       <v-snackbar v-model="snackbar" :color="color" timeout="2000" bottom>{{ error_message }} </v-snackbar>
-
+    <v-snackbar v-model="snackbar" :color="color" timeout="2000" bottom
+      >{{ error_message }}
+    </v-snackbar>
   </v-main>
 </template>
-
 
 <script>
 export default {
   name: "List",
   data() {
     return {
-      inputType: 'Tambah',
+      inputType: "Tambah",
       load: false,
       snackbar: false,
-      error_message: '',
-      color: '',
+      error_message: "",
+      color: "",
       search: null,
       dialog: false,
       dialogConfirm: false,
       headers: [
-        { text: "Hari Kerja", align: "start", sortable: true, value: "hari_kerja"},
-        { text: "Jenis Shift", value: 'jenis_shift'},
-        { text: "Jam Mulai", value: 'jam_mulai'},
-        { text: "Jam Selesai", value: 'jam_selesai'},
-        { text: "Action", value:'actions'},
+        {
+          text: "Hari Kerja",
+          align: "start",
+          sortable: true,
+          value: "hari_kerja",
+        },
+        { text: "Jenis Shift", value: "jenis_shift" },
+        { text: "Jam Mulai", value: "jam_mulai" },
+        { text: "Jam Selesai", value: "jam_selesai" },
+        { text: "Action", value: "actions" },
       ],
-      jadwal: new FormData,
+      jadwal: new FormData(),
       jadwals: [],
-      form:{
-        hari_kerja: '',
-        jenis_shift: '',
-        jam_mulai: '',
-        jam_selesai: '',
+      form: {
+        hari_kerja: "",
+        jenis_shift: "",
+        jam_mulai: "",
+        jam_selesai: "",
       },
-      deleteId: '',
-      editId: ''
+      deleteId: "",
+      editId: "",
     };
   },
 
   methods: {
-    setForm(){
-      if(this.inputType !== 'Tambah'){
+    setForm() {
+      if (this.inputType !== "Tambah") {
         this.update();
-      }
-      else{
+      } else {
         this.save();
       }
     },
 
-    readData(){
-      var url = this.$api + '/jadwal';
-      this.$http.get(url, {
-        headers: {
-          'Authorization' : 'Bearer ' + localStorage.getItem('token')
-        }
-      }).then(response => {
-        this.jadwals = response.data.data;
-      })
+    readData() {
+      var url = this.$api + "/jadwal";
+      this.$http
+        .get(url, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        })
+        .then((response) => {
+          this.jadwals = response.data.data;
+        });
     },
 
-    save(){
-      this.jadwal.append('hari_kerja',this.form.hari_kerja);
-      this.jadwal.append('jenis_shift',this.form.jenis_shift);
-      this.jadwal.append('jam_mulai',this.form.jam_mulai);
-      this.jadwal.append('jam_selesai', this.form.jam_selesai);
+    save() {
+      this.jadwal.append("hari_kerja", this.form.hari_kerja);
+      this.jadwal.append("jenis_shift", this.form.jenis_shift);
+      this.jadwal.append("jam_mulai", this.form.jam_mulai);
+      this.jadwal.append("jam_selesai", this.form.jam_selesai);
 
-      var url= this.$api + '/jadwal/'
+      var url = this.$api + "/jadwal/";
       this.load = true;
-      this.$http.post(url, this.jadwal, {
-        headers: {
-          'Authorization' : 'Bearer ' + localStorage.getItem('token'),
-        }
-      }).then(response => {
-        this.error_message = response.data.message;
-        this.color = "green";
-        this.snackbar = true;
-        this.load = true;
-        this.close();
-        this.readData();
-        this.resetForm();
-      }).catch(error => {
-        this.error_message = error.response.data.message;
-        this.color = "red";
-        this.snackbar = true;
-        this.load = false;
-      });
+      this.$http
+        .post(url, this.jadwal, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        })
+        .then((response) => {
+          this.error_message = response.data.message;
+          this.color = "green";
+          this.snackbar = true;
+          this.load = true;
+          this.close();
+          this.readData();
+          this.resetForm();
+        })
+        .catch((error) => {
+          this.error_message = error.response.data.message;
+          this.color = "red";
+          this.snackbar = true;
+          this.load = false;
+        });
     },
 
-    update(){
+    update() {
       let newData = {
-        hari_kerja : this.form.hari_kerja,
-        jenis_shift : this.form.jenis_shift,
-        jam_mulai : this.form.jam_mulai,
+        hari_kerja: this.form.hari_kerja,
+        jenis_shift: this.form.jenis_shift,
+        jam_mulai: this.form.jam_mulai,
         jam_selesai: this.form.jam_selesai,
-        
       };
-      var url = this.$api + '/jadwal/' + this.editId;
+      var url = this.$api + "/jadwal/" + this.editId;
       this.load = true;
-      this.$http.put(url, newData, {
-        headers: {
-          'Authorization' : 'Bearer ' + localStorage.getItem('token')
-        }
-      }).then(response => {
-        this.error_message = response.data.message;
-        this.color = 'green';
-        this.snackbar = true;
-        this.load = false;
-        this.close();
-        this.readData();
-        this.resetForm();
-        this.inputType = 'Tambah';
-      }).catch(error => {
-        this.error_message = error.response.data.message;
-        this.color = 'red';
-        this.snackbar = true;
-        this.load = false;
-      });
+      this.$http
+        .put(url, newData, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        })
+        .then((response) => {
+          this.error_message = response.data.message;
+          this.color = "green";
+          this.snackbar = true;
+          this.load = false;
+          this.close();
+          this.readData();
+          this.resetForm();
+          this.inputType = "Tambah";
+        })
+        .catch((error) => {
+          this.error_message = error.response.data.message;
+          this.color = "red";
+          this.snackbar = true;
+          this.load = false;
+        });
     },
 
     deleteData() {
       //mengahapus data
-      var url = this.$api + '/jadwal/' + this.deleteId;
+      var url = this.$api + "/jadwal/" + this.deleteId;
       //data dihapus berdasarkan id
-      this.$http.delete(url, {
+      this.$http
+        .delete(url, {
           headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
         })
         .then((response) => {
@@ -215,8 +243,8 @@ export default {
         });
     },
 
-    editHandler(item){
-      this.inputType = 'Ubah';
+    editHandler(item) {
+      this.inputType = "Ubah";
       this.editId = item.id_jadwal;
       this.form.hari_kerja = item.hari_kerja;
       this.form.jenis_shift = item.jenis_shift;
@@ -244,10 +272,10 @@ export default {
     },
     resetForm() {
       this.form = {
-       hari_kerja: '',
-        jenis_shift: '',
-        jam_mulai: '',
-        jam_selesai: '',
+        hari_kerja: "",
+        jenis_shift: "",
+        jam_mulai: "",
+        jam_selesai: "",
       };
     },
   },
