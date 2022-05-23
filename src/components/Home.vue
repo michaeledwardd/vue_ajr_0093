@@ -105,46 +105,79 @@
     </v-snackbar>
 
     <h2><center>Data Mobil</center></h2>
-    <v-row>
-      <v-col v-for="(item, index) in mobils" :key="index" md="4">
-        <v-card class="mx-auto" max-width="344">
-          <v-img
-            :src="$baseUrl + '/storage/' + item.foto_mobil"
-            height="200px"
-          ></v-img>
 
-          <v-card-title> {{ item.nama_mobil }} </v-card-title>
+    <v-carousel
+      hide-delimiters
+      show-arrows-on-hover
+      cycle
+      :interval="10000"
+      style="height: fit-content !important"
+    >
+      <template v-for="(item, index) in mobils">
+        <v-carousel-item
+          v-if="(index + 1) % columns === 1 || columns === 1"
+          :key="index"
+        >
+          <v-row>
+            <template v-for="(n, i) in columns">
+              <template v-if="+index + i < mobils.length">
+                <v-col :key="i">
+                  <v-card class="mx-auto" max-width="344">
+                    <v-img
+                      :src="
+                        $baseUrl + '/storage/' + mobils[+index + i].foto_mobil
+                      "
+                      height="200px"
+                    ></v-img>
+                    <v-card-title>
+                      {{ mobils[+index + i].nama_mobil }}
+                    </v-card-title>
+                    <v-card-subtitle>
+                      <span
+                        v-if="
+                          mobils[+index + i].status_ketersediaan == 'tersedia'
+                        "
+                      >
+                        <v-chip color="green">Tersedia</v-chip>
+                      </span>
+                      <span
+                        v-if="
+                          mobils[+index + i].status_ketersediaan ==
+                          'tidak tersedia'
+                        "
+                      >
+                        <v-chip color="red">Tidak Tersedia</v-chip>
+                      </span>
+                      - {{ mobils[+index + i].biaya_sewa }}</v-card-subtitle
+                    >
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn icon @click="show = !show" :key="index">
+                        <v-icon>{{
+                          show ? "mdi-chevron-up" : "mdi-chevron-down"
+                        }}</v-icon>
+                      </v-btn>
+                    </v-card-actions>
+                    <v-expand-transition>
+                      <div v-show="show">
+                        <v-divider></v-divider>
+                        <v-card-text>
+                          {{ mobils[+index + i].fasilitas }} -
+                          {{ mobils[+index + i].bahan_bakar }}
+                        </v-card-text>
+                      </div>
+                    </v-expand-transition>
+                  </v-card>
+                </v-col>
+              </template>
+            </template>
+          </v-row>
+        </v-carousel-item>
+      </template>
+    </v-carousel>
 
-          <v-card-subtitle>
-            {{ item.status_ketersediaan }} -
-            {{ item.biaya_sewa }}</v-card-subtitle
-          >
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-
-            <v-btn icon @click="show = !show">
-              <v-icon>{{
-                show ? "mdi-chevron-up" : "mdi-chevron-down"
-              }}</v-icon>
-            </v-btn>
-          </v-card-actions>
-
-          <v-expand-transition>
-            <div v-show="show">
-              <v-divider></v-divider>
-
-              <v-card-text>
-                {{ item.fasilitas }} - {{ item.bahan_bakar }}
-              </v-card-text>
-            </div>
-          </v-expand-transition>
-        </v-card>
-      </v-col>
-    </v-row>
-
-    <h2><center>Promo Berlaku</center></h2>
-    <v-row>
+    <h2 style="margin-top: -100px"><center>Promo Berlaku</center></h2>
+    <v-row style="padding-bottom: 50px">
       <v-col v-for="(item, index) in promos" :key="index" md="4">
         <v-card class="mx-auto" max-width="344">
           <v-card-title>
@@ -152,7 +185,13 @@
           </v-card-title>
 
           <v-card-subtitle>
-            {{ item.keterangan }} - {{ item.status_promo }}
+            {{ item.keterangan }} -
+            <span v-if="item.status_promo == 'aktif'">
+              <v-chip color="green">Aktif</v-chip>
+            </span>
+            <span v-if="item.status_promo == 'non-aktif'">
+              <v-chip color="red">Non Aktif</v-chip>
+            </span>
           </v-card-subtitle>
         </v-card>
       </v-col>
@@ -351,6 +390,21 @@ export default {
       .catch((error) => {
         console.log(error);
       });
+  },
+  computed: {
+    columns() {
+      if (this.$vuetify.breakpoint.xl) {
+        return 3;
+      }
+      if (this.$vuetify.breakpoint.lg) {
+        return 3;
+      }
+      if (this.$vuetify.breakpoint.md) {
+        return 2;
+      }
+
+      return 1;
+    },
   },
 };
 </script>

@@ -75,40 +75,43 @@ export default {
   name: "Dashboard",
   data() {
     return {
+      mobils: [],
+      promos: [],
+      customers: [],
       activityLog: [
         {
           title: "Mobil",
-          amount: 10,
+          amount: "",
           icon: "mdi-account",
           color: "green darken-2",
         },
         {
           title: "Customer",
-          amount: 9,
+          amount: "",
           icon: "mdi-account-group-outline",
           color: "green darken-2",
         },
         {
           title: "Mitra",
-          amount: 5,
+          amount: "",
           icon: "mdi-account-group-outline",
           color: "green darken-2",
         },
         {
           title: "Promo",
-          amount: 4,
+          amount: "",
           icon: "mdi-account-group-outline",
           color: "blue darken-1",
         },
         {
           title: "Driver",
-          amount: 7,
+          amount: "",
           icon: "mdi-account-group-outline",
           color: "blue darken-1",
         },
         {
           title: "Transaksi",
-          amount: 12,
+          amount: "",
           icon: "mdi-account-group-outline",
           color: "blue darken-1",
         },
@@ -119,6 +122,37 @@ export default {
     onButtonClick(item) {
       console.log("click on " + item.no);
     },
+  },
+  mounted() {
+    this.$http
+      .get(this.$api + "/mobil")
+      .then((response) => {
+        this.mobils = response.data.data;
+        this.activityLog[0].amount = this.mobils.length;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    this.$http
+      .get(this.$api + "/customer")
+      .then((response) => {
+        this.customers = response.data.data;
+        this.activityLog[1].amount = this.customers.length;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    this.$http
+      .get(this.$api + "/promo")
+      .then((response) => {
+        this.promos = response.data.data;
+        this.activityLog[3].amount = this.promos.length;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
 };
 </script>

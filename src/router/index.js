@@ -10,7 +10,15 @@ Vue.use(VueRouter);
 const router = new VueRouter({
     mode: 'history',
     routes: [
+        //login
         {
+            path: '/',
+            name: 'Home',
+            meta: { title: 'Atma Jaya Rental' },
+            component: importComponent('Home'),
+        },
+        {
+            
             path: '/',
             component: importComponent('DashboardLayout'),
             children: [
@@ -143,13 +151,7 @@ const router = new VueRouter({
             meta: { title: 'Login' },
             component: importComponent('Login'),
         },
-        //login
-        {
-            path: '/home',
-            name: 'Home',
-            meta: { title: 'Atma Jaya Rental' },
-            component: importComponent('Home'),
-        },
+        
         {
             path: '*',
             redirect: '/'
