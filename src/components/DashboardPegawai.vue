@@ -78,6 +78,9 @@ export default {
       mobils: [],
       promos: [],
       customers: [],
+      mitras: [],
+      drivers: [],
+      transaksis: [],
       activityLog: [
         {
           title: "Mobil",
@@ -145,10 +148,40 @@ export default {
       });
 
     this.$http
+      .get(this.$api + "/mitra")
+      .then((response) => {
+        this.mitras = response.data.data;
+        this.activityLog[2].amount = this.mitras.length;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    this.$http
       .get(this.$api + "/promo")
       .then((response) => {
         this.promos = response.data.data;
         this.activityLog[3].amount = this.promos.length;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    this.$http
+      .get(this.$api + "/driver")
+      .then((response) => {
+        this.drivers = response.data.data;
+        this.activityLog[4].amount = this.drivers.length;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    this.$http
+      .get(this.$api + "/transaksi")
+      .then((response) => {
+        this.transaksis = response.data.data;
+        this.activityLog[5].amount = this.transaksis.length;
       })
       .catch((error) => {
         console.log(error);

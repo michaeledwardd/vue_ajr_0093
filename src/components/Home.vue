@@ -163,7 +163,8 @@
                         <v-divider></v-divider>
                         <v-card-text>
                           {{ mobils[+index + i].fasilitas }} -
-                          {{ mobils[+index + i].bahan_bakar }}
+                          {{ mobils[+index + i].bahan_bakar }} -
+                          {{ mobils[+index + i].plat_nomor }}
                         </v-card-text>
                       </div>
                     </v-expand-transition>

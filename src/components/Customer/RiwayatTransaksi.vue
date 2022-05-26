@@ -314,7 +314,23 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red darken-1" text @click="cancel"> Cancel </v-btn>
-          <v-btn color="blue darken-1" text @click="setForm"> Save </v-btn>
+          <v-btn color="blue darken-1" text @click="dialogConfirm = true">
+            Save
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="dialogConfirm" persistent max-width="400px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">warning!</span>
+        </v-card-title>
+        <v-card-text> Are you sure? </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="cancel"> Cancel </v-btn>
+          <v-btn color="blue darken-1" text @click="setForm"> Yakin </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

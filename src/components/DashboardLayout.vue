@@ -11,7 +11,7 @@
         <v-avatar color="blue">
           <span class="white--text text-h7">AJR</span>
         </v-avatar>
-        <v-list-item-title>Atma Jaya Rental</v-list-item-title>
+        <v-list-item-title>Atma Jogja Rental</v-list-item-title>
 
         <v-btn icon @click.stop="mini = !mini">
           <v-icon>mdi-chevron-left</v-icon>

@@ -64,7 +64,23 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red darken-1" text @click="cancel"> Cancel </v-btn>
-          <v-btn color="blue darken-1" text @click="setForm"> Save </v-btn>
+          <v-btn color="blue darken-1" text @click="dialogConfirmEdit = true">
+            Save
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="dialogConfirmEdit" persistent max-width="400px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">warning!</span>
+        </v-card-title>
+        <v-card-text> Are you sure? </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="cancel"> Cancel </v-btn>
+          <v-btn color="blue darken-1" text @click="setForm"> Yakin </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -74,12 +90,10 @@
         <v-card-title>
           <span class="headline">warning!</span>
         </v-card-title>
-        <v-card-text> Anda yakin ingin menghapus waktu kerja ini? </v-card-text>
+        <v-card-text> Are you sure want to delete this data? </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="dialogConfirm = false">
-            Cancel
-          </v-btn>
+          <v-btn color="blue darken-1" text @click="cancel"> Cancel </v-btn>
           <v-btn color="blue darken-1" text @click="deleteData"> Delete </v-btn>
         </v-card-actions>
       </v-card>
@@ -104,6 +118,7 @@ export default {
       search: null,
       dialog: false,
       dialogConfirm: false,
+      dialogConfirmEdit: false,
       headers: [
         {
           text: "Hari Kerja",
@@ -261,6 +276,7 @@ export default {
       this.dialog = false;
       this.inputType = "Tambah";
       this.dialogConfirm = false;
+      this.dialogConfirmEdit = false;
       this.readData();
     },
     cancel() {
@@ -268,6 +284,7 @@ export default {
       this.readData();
       this.dialog = false;
       this.dialogConfirm = false;
+      this.dialogConfirmEdit = false;
       this.inputType = "Tambah";
     },
     resetForm() {
