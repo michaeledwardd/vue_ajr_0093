@@ -303,7 +303,7 @@ export default {
       this.customer.append("usia_customer", this.form.usia_customer);
       this.customer.append("status_berkas", []);
 
-      var url = this.$api + "/customer/";
+      var url = this.$api + "/customer";
       this.load = true;
       this.$http
         .post(url, this.customer, {

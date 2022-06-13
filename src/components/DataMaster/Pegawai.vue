@@ -279,7 +279,7 @@ export default {
       this.pegawai.append("password", this.form.password);
       this.pegawai.append("is_aktif", this.form.is_aktif);
 
-      var url = this.$api + "/pegawai/";
+      var url = this.$api + "/pegawai";
       this.load = true;
       this.$http
         .post(url, this.pegawai, {

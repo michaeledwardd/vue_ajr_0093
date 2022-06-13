@@ -172,7 +172,7 @@ export default {
       this.jadwal.append("jam_mulai", this.form.jam_mulai);
       this.jadwal.append("jam_selesai", this.form.jam_selesai);
 
-      var url = this.$api + "/jadwal/";
+      var url = this.$api + "/jadwal";
       this.load = true;
       this.$http
         .post(url, this.jadwal, {

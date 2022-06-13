@@ -172,7 +172,7 @@ export default {
       this.mitra.append("nomor_telepon", this.form.nomor_telepon);
       this.mitra.append("is_aktif", this.form.is_aktif);
 
-      var url = this.$api + "/mitra/";
+      var url = this.$api + "/mitra";
       this.load = true;
       this.$http
         .post(url, this.mitra, {

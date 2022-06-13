@@ -7,8 +7,8 @@ import axios from 'axios';
 Vue.config.productionTip = false
 
 Vue.prototype.$http = axios;
-Vue.prototype.$api = 'http://127.0.0.1:8000/api';
-Vue.prototype.$baseUrl = 'http://127.0.0.1:8000';
+Vue.prototype.$api = 'https://backendajr.ajr-edward.xyz/api';
+Vue.prototype.$baseUrl = 'https://backendajr.ajr-edward.xyz/public';
 new Vue({
   vuetify,
   router,

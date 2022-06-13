@@ -151,7 +151,7 @@ export default {
       this.role.append("nama_role", this.form.nama_role);
       this.role.append("peranan", this.form.peranan);
 
-      var url = this.$api + "/role/";
+      var url = this.$api + "/role";
       this.load = true;
       this.$http
         .post(url, this.role, {

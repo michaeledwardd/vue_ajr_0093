@@ -510,7 +510,7 @@ export default {
       this.mobil.append("akhir_kontrak", this.form.akhir_kontrak);
       this.mobil.append("nomor_stnk", this.form.nomor_stnk);
       this.mobil.append("status_ketersediaan", this.form.status_ketersediaan);
-      var url = this.$api + "/mobil/";
+      var url = this.$api + "/mobil";
       this.load = true;
       this.$http
         .post(url, this.mobil, {

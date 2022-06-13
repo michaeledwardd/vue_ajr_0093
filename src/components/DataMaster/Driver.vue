@@ -538,7 +538,7 @@ export default {
         dataFileSKCK = inputfotoSKCK.files[0];
       this.driver.append("upload_skck", dataFileSKCK);
 
-      var url = this.$api + "/driver/";
+      var url = this.$api + "/driver";
       this.load = true;
       this.$http
         .post(url, this.driver, {

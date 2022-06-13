@@ -692,7 +692,7 @@ export default {
         this.transaksi.append("rating_perform_driver", []);
       }
 
-      var url = this.$api + "/transaksi/";
+      var url = this.$api + "/transaksi";
       this.load = true;
       this.$http
         .post(url, this.transaksi, {

@@ -301,7 +301,7 @@ export default {
       this.customer.append("password", this.form.password);
       this.customer.append("usia_customer", this.form.usia_customer);
 
-      var url = this.$api + "/customer/";
+      var url = this.$api + "/customer";
       this.load = true;
       this.$http
         .post(url, this.customer, {
